@@ -1,11 +1,14 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import express from 'express'
+import express, { response } from 'express'
 import cookieParser from 'cookie-parser'
 import Fingerprint from "express-fingerprint";
 import { IUser } from './src/shared/interfaces/user.interface';
 import {UserRepository} from './src/repository/mongo/UserRepository'
 import { RoleType } from './src/shared/enums';
+import { UserDto } from './src/shared/dtos/user.dto';
+import { TokenService } from './src/services/token.service';
+import { UserModel } from './src/models/user.model';
 dotenv.config()
 
 
@@ -28,12 +31,20 @@ const user: IUser = {
   name: 'david',
   password: 'addssa',
   email: 'mail@mail.com',
-  role: [RoleType.ADMIN,RoleType.PROJECT_MANAGER]
+  roles: [RoleType.ADMIN,RoleType.PROJECT_MANAGER],
+  skills: []
 }
+const userDto = new UserDto(user)
+
+//const tokens = TokenService.generateTokens({...userDto})
+//console.log(TokenService.validateAccessToken('fsdf'))
+//console.log(userDto)
+//console.log(tokens)
 mongoose.connect(String(process.env.LOCAL_MONGO))
 mongoose.set('debug', true)
+//userRepository.findOne({name: user.name, email: user.email, games: 'cs'}).then((response)=>console.log(response)).catch((e)=>console.log(e))
 //userRepository.createUser(user).then(()=> {console.log('ss')}).catch((err)=> {console.log(err)})
-//userRepository.findUserByEmail(user.email).then((response)=> {console.log(response)}).catch((err)=>{console.log(err)})
+//userRepository.findByEmail(user.email).then((response)=> {console.log(response)}).catch((err)=>{console.log(err)})
 app.listen(PORT, () => {
   console.log("Server started");
 });

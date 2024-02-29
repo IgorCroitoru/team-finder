@@ -10,12 +10,13 @@ const UserSchema = new Schema<IUserDoc>({
     password: { type: String, required: true },
     name: { type: String, required: true },
     departmentId: {type: String, default: ''},
-    role: [{ 
+    roles: [{ 
       type: Number, 
       enum: Object.values(RoleType).filter(value => typeof value === 'number'), 
-      required: true 
+      required: true,
+      default: RoleType.EMPLOYEE 
     }],
-    skills: [{ type: Schema.Types.ObjectId, ref: 'UserSkill' }],
+    skills: [{ type: Schema.Types.ObjectId, ref: 'UserSkill', default: [] }],
     availableHours: { 
         type: Number, 
         required: true, 
@@ -27,11 +28,11 @@ const UserSchema = new Schema<IUserDoc>({
     },{
     timestamps: true
   });
-UserSchema.pre<IUserDoc>("save", async function(next) {
-    if (this.isModified('password')) {
-      this.password = await bcrypt.hash(this.password, Number(process.env.ROUNDS));
-    }
-    next();
-  });
+// UserSchema.pre<IUserDoc>("save", async function(next) {
+//     if (this.isModified('password')) {
+//       this.password = await bcrypt.hash(this.password, Number(process.env.ROUNDS));
+//     }
+//     next();
+//   });
   
 export const UserModel = mongoose.model<IUserDoc>('User', UserSchema);

@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv/config';
 import mongoose from 'mongoose';
 import express, { response } from 'express'
 import cookieParser from 'cookie-parser'
@@ -9,7 +9,6 @@ import { UserDto } from './src/shared/dtos/user.dto';
 import errorMiddleware from './src/middlewares/errorMiddleWare'
 import authRoute from './src/routes/auth.route'
 import Routes from "./src/routes"
-dotenv.config() 
 
 
 const app = express();
@@ -24,8 +23,6 @@ app.use('/admin',Routes.adminRoute )
 app.use(errorMiddleware);
 
 console.log(process.env.REMOTE_MONGO)
-console.log(process.env.JWT_ACCESS_SECRET)
-console.log(process.env.JWT_REFRESH_SECRET)
 mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {

@@ -23,8 +23,9 @@ app.use('/auth',Routes.authRoute)
 app.use('/admin',Routes.adminRoute )
 app.use(errorMiddleware);
 
-
 console.log(process.env.REMOTE_MONGO)
+console.log(process.env.JWT_ACCESS_SECRET)
+console.log(process.env.JWT_REFRESH_SECRET)
 mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {

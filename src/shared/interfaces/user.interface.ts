@@ -10,9 +10,10 @@ export interface IUser {
     password: string
     name: string
     availableHours?: number
-    skills: IUserSkill[]
+    skills?: IUserSkill[]
     departmentId?: string
-    roles: RoleType[]
+    roles?: RoleType[]
+    organizationId?: string
     //projects:
   }
 

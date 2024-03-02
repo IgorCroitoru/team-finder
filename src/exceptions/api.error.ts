@@ -30,6 +30,8 @@ export class CustomError extends Error {
     BadRequest: new CustomError('Bad request', 5, 400),
     GenericBad: new CustomError('Something went wrong on our end, please try again', 6, 500),
     UserExist: new CustomError('User with this mail already exist', 7,400),
+    NonexistentUser: new CustomError("This user no longer exist", 8, 400),
+    UnauthorizedError: new CustomError("You are not authorized",9, 401 )
 
     
   };

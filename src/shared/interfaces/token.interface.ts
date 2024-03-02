@@ -4,6 +4,6 @@ export interface IToken{
     _id?: any
     userId: string | mongoose.Types.ObjectId
     refreshToken: string
-    expires: Date
-    fingerprint: string
+    expires?: Date
+    //fingerprint?: string
 }

@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -25,16 +25,13 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          npm run start
-
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
+          npm run test --if-present
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: release.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,20 +47,17 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5F4B31CF1B6D4564B15A743932082FE9 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0073B4E8FE7F4AF6BFAB8B66444D0724 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5330D260CEE94E87A8508DDF491F627E }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_60F73B5371964D509CF2454223DFEFF9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7A5D271E19C14B8FACA8D0D776B02328 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C260237DDB1F4CB69BD6599376F00987 }}
 
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
         with:
           app-name: 'TeamFinderApp'
           slot-name: 'Production'

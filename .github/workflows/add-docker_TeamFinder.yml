@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://index.docker.io/v1/
-        username: ${{ secrets.AzureAppService_ContainerUsername_add3cdf48d3d4a678095f9c082a645c2 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_a7b439a8c14947ff97e49c9421979266 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_3347138e2b36471783d5588db5b57213 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_ee0a86be49fa4789a569fb18ac5c2001 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_add3cdf48d3d4a678095f9c082a645c2 }}/igorcroitoru/teamfinderapp:${{ github.sha }}
+        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_3347138e2b36471783d5588db5b57213 }}/igorcroitoru/teamfinderapp:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'TeamFinder'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b4286a4262c24a3fa23d5742415cc267 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_add3cdf48d3d4a678095f9c082a645c2 }}/igorcroitoru/teamfinderapp:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_bdc8a963bc424b9085e8a883f7a3d4fb }}
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_3347138e2b36471783d5588db5b57213 }}/igorcroitoru/teamfinderapp:${{ github.sha }}'

@@ -20,12 +20,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - name: Print environment variables (for debugging only)
-        run: env
+     
       - name: npm install, build, and test
         run: |
           npm install
-          npm run start
+         
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3

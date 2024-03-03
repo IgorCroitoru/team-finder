@@ -23,7 +23,7 @@ app.use('/admin',Routes.adminRoute )
 
 app.use(errorMiddleware);
 
-
+console.log('dads')
 mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {

@@ -15,7 +15,15 @@ COPY . .
 
 # Build your application
 RUN npm run build
-
+ARG REMOTE_MONGO
+ARG ROUNDS
+ARG JWT_ACCESS_SECRET
+ARG JWT_REFRESH_SECRET
+ARG JWT_SIGNUP_SECRET
+ENV REMOTE_MONGO=${REMOTE_MONGO}\
+    ROUNDS=${ROUNDS}\
+    JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}\
+    JWT_SIGNUP_SECRET=${JWT_SIGNUP_SECRET}
 # Optionally, start a new stage to create a lean production image
 FROM node:lts-alpine
 WORKDIR /app

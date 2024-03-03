@@ -29,7 +29,13 @@ jobs:
         push: true
         tags: igorcroitoru/teamfinder:${{ github.sha }}
         file: ./Dockerfile
-        
+        build-args: |
+          PORT=${{ secrets.PORT }}
+          REMOTE_MONGO=${{ secrets.REMOTE_MONGO }}
+          ROUNDS=${{ secrets.ROUNDS }}
+          JWT_ACCESS_SECRET=${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET=${{ secrets. JWT_REFRESH_SECRET }}
+          JWT_SIGNUP_SECRET=${{ secrets.JWT_SIGNUP_SECRET }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2

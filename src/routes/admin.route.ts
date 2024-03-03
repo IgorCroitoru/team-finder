@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/invitation', UserController.generateInvitation)
 router.get('/some',(req: Request, res: Response)=> {
-    res.json({ok: 'da'})
+    res.json({ok: 'dadadad'})
 })
 
 export default router

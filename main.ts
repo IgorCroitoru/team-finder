@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(Fingerprint());
 app.use('/auth',Routes.authRoute)
 app.use('/admin',Routes.adminRoute )
+
 app.use(errorMiddleware);
 
 

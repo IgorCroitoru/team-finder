@@ -54,6 +54,9 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7A5D271E19C14B8FACA8D0D776B02328 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C260237DDB1F4CB69BD6599376F00987 }}
 
+       - name: Print environment variables (for debugging only)
+          run: env
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp

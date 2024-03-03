@@ -12,7 +12,7 @@ import Routes from "./src/routes"
 
 
 const app = express();
-const PORT = process.env.PORT || 1337;
+const PORT = process.env.PORT || 3000;
 
 
 app.use(cookieParser());
@@ -21,6 +21,7 @@ app.use(Fingerprint());
 app.use('/auth',Routes.authRoute)
 app.use('/admin',Routes.adminRoute )
 app.use(errorMiddleware);
+
 
 mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)

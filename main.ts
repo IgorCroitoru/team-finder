@@ -22,8 +22,8 @@ app.use('/auth',Routes.authRoute)
 app.use('/admin',Routes.adminRoute )
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.REMOTE_MONGO))
-mongoose.set('debug', true)
+//mongoose.connect(String(process.env.REMOTE_MONGO))
+//mongoose.set('debug', true)
 app.listen(PORT, () => {
   console.log("Server started");
 });

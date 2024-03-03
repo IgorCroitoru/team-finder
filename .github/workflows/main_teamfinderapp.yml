@@ -25,7 +25,8 @@ jobs:
         run: |
           npm install
           npm run start
-      
+      - name: Print environment variables (for debugging only)
+        run: env
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:

@@ -22,7 +22,6 @@ export class UserController{
             let inviteToken;
             if (req.headers.authorization){
                 accessToken = req.headers.authorization.split(' ')[1];
-                console.log(accessToken)
             }
            
             else{
@@ -75,7 +74,8 @@ export class UserController{
                 name: req.body.name,
                 password: req.body.password,
             }
-            const userData = await AuthService.register(user)
+            const invitationToken = req.body.invitationToken
+            const userData = await AuthService.register(user, invitationToken)
             res.cookie('refreshToken', userData.refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN)
             res.json({
                     success: true,

@@ -10,6 +10,7 @@ import { RoleType } from "../shared/enums";
 import { IOrganization } from "../shared/interfaces/organization.interface";
 import {generateInvitationToken} from "../shared/utils/index"
 import mongoose from "mongoose";
+import { IInvitation } from "../shared/interfaces/invite.interface";
 dotenv.config()
 export class AuthService{
   constructor(){}
@@ -62,16 +63,23 @@ export class AuthService{
      // session.endSession();
     }
   }
-  static async register(_user:IUser): Promise<any>{
+  static async register(_user:IUser, invitationToken: string): Promise<any>{
+    if(!invitationToken ) throw Errors.UnauthorizedError
+    if(!TokenService.isValidInvitationToken(invitationToken)) throw Errors.InvalidInvitation
     const candidate =await UserModel.findOne({email:_user.email}).exec()
     if(candidate){
       throw Errors.UserExist;
     }
+    const invitationDetails = TokenService.decodeToken(invitationToken) as IInvitation
     const hashPassword = await bcrypt.hash(_user.password,Number(process.env.ROUNDS) || 10)
     _user.password = hashPassword;
     _user.roles = [RoleType.EMPLOYEE]
+    _user.organizationId = invitationDetails.organizationId
+    console.log(invitationDetails)
     const user = await UserModel.create(_user);
+    console.log(user)
     const userDto = new UserDto(user);
+    console.log(userDto)
     const tokens = TokenService.generateTokens({...userDto})
     await TokenService.createToken({refreshToken: tokens.refreshToken, userId: user._id })
     return ({...tokens,user: userDto})

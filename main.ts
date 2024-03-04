@@ -23,7 +23,7 @@ app.use('/admin',Routes.adminRoute )
 
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.REMOTE_MONGO))
+mongoose.connect(String(process.env.LOCAL_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);

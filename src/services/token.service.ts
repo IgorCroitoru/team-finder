@@ -6,6 +6,7 @@ import { IToken } from '../shared/interfaces/token.interface';
 import { TokenRepository } from '../repository/mongo/TokenRepository';
 import { TokenModel } from '../models/token.model';
 import { ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION } from '../../constants';
+import { Errors } from '../exceptions/api.error';
 
 dotenv.config()
 export  class TokenService {
@@ -30,11 +31,25 @@ export  class TokenService {
      static decodeToken(token: string){
         try{
             const decoded = jwt.decode(token, {json: true})
-            console.log(decoded)
-            return decoded
+            if(decoded){
+                return decoded
+            }
+            else {
+                throw Errors.InvalidInvitation
+            }
         }
         catch(e){
             throw e
+        }
+     }
+     static isValidInvitationToken(token: string): boolean{
+        try{
+            const user = jwt.verify(token, String(process.env.JWT_SIGNUP_SECRET))
+            if(user) return true
+            return false
+        }
+        catch(e){
+            return false
         }
      }
 

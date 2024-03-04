@@ -31,7 +31,8 @@ export class CustomError extends Error {
     GenericBad: new CustomError('Something went wrong on our end, please try again', 6, 500),
     UserExist: new CustomError('User with this mail already exist', 7,400),
     NonexistentUser: new CustomError("This user no longer exist", 8, 400),
-    UnauthorizedError: new CustomError("You are not authorized",9, 401 )
+    UnauthorizedError: new CustomError("You are not authorized",9, 401 ),
+    InvalidInvitation: new CustomError('This invitation is not valid', 9, 400)
 
     
   };

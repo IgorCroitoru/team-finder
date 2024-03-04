@@ -7,6 +7,8 @@ import { TokenRepository } from '../repository/mongo/TokenRepository';
 import { TokenModel } from '../models/token.model';
 import { ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION } from '../../constants';
 import { Errors } from '../exceptions/api.error';
+import mongoose from 'mongoose';
+import { Console } from 'console';
 
 dotenv.config()
 export  class TokenService {
@@ -63,6 +65,27 @@ export  class TokenService {
         
     }
 
+    static validateRefreshToken(token:string){
+        try{
+            const userData = jwt.verify(token, String(process.env.JWT_REFRESH_SECRET));
+            return userData as UserDto;
+        }
+        catch(e){
+            return null
+        }
+    }
+
+    static validateAccessToken(token:string){
+        try{
+            const userData = jwt.verify(token, String(process.env.JWT_ACCESS_SECRET));
+            return userData as UserDto;
+        }
+        catch(e){
+            return null
+        }
+    }
+
+
     static async findToken(refreshToken: string): Promise<IToken | null>{
         const token = await TokenModel.findOne({refreshToken}).exec();
         if(!token){
@@ -73,5 +96,16 @@ export  class TokenService {
     static async createToken(token:IToken): Promise<IToken>{
         const newToken = await TokenModel.create({...token})
         return newToken
+    }
+    static async saveToken(userId: string | mongoose.Schema.Types.ObjectId, refreshToken: string){
+        const tokenData = await TokenModel.findOne({userId}).exec();
+        if(tokenData){
+            tokenData.refreshToken = refreshToken
+
+            
+            return tokenData.save()
+        }
+        const token = await TokenModel.create({user: userId, refreshToken})
+        return token;
     }
 }

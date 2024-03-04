@@ -16,6 +16,24 @@ export class AuthService{
   constructor(){}
 
   
+
+  static async login(email: string, password: string){
+    const user:IUser | null = await UserModel.findOne({email}).exec()
+    if(!user){
+      throw Errors.UserDoesNotExist
+    }
+    const isEquals = await bcrypt.compare(password, user.password)
+    if(!isEquals){
+      throw Errors.BadCredentials
+    }
+    const userDto = new UserDto(user);
+    const tokens = TokenService.generateTokens({ ...userDto });
+      
+    await TokenService.createToken({ refreshToken: tokens.refreshToken, userId: user._id });
+    
+    return { ...tokens, user: userDto };
+  }
+
   static async adminRegistration(user: IUser, organization: IOrganization) {
     const candidate = await UserModel.findOne({email:user.email}).exec()
     if(candidate){
@@ -67,6 +85,7 @@ export class AuthService{
     if(!invitationToken ) throw Errors.UnauthorizedError
     if(!TokenService.isValidInvitationToken(invitationToken)) throw Errors.InvalidInvitation
     const candidate =await UserModel.findOne({email:_user.email}).exec()
+    console.log(candidate)
     if(candidate){
       throw Errors.UserExist;
     }
@@ -75,11 +94,8 @@ export class AuthService{
     _user.password = hashPassword;
     _user.roles = [RoleType.EMPLOYEE]
     _user.organizationId = invitationDetails.organizationId
-    console.log(invitationDetails)
     const user = await UserModel.create(_user);
-    console.log(user)
     const userDto = new UserDto(user);
-    console.log(userDto)
     const tokens = TokenService.generateTokens({...userDto})
     await TokenService.createToken({refreshToken: tokens.refreshToken, userId: user._id })
     return ({...tokens,user: userDto})

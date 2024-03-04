@@ -15,6 +15,11 @@ dotenv.config()
 
 export class UserService {
 
+    static async logout(refreshToken:string){
+        const token = await TokenService.decodeToken(refreshToken)
+        return token
+    }
+
     static async refresh(refreshToken: string){
         if(!refreshToken){
             throw Errors.UnauthorizedError

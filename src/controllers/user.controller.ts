@@ -17,6 +17,18 @@ export class UserController{
    
     constructor(){}
 
+    static async logout(req: Request, res: Response, next:NextFunction){
+        try{
+            const {refreshToken} = req.cookies
+            await TokenService.removeToken(refreshToken)
+            res.clearCookie('refreshToken')
+            return res.json({success: true})
+        }
+        catch(e){
+            next(e)
+        }
+    }
+
     static async refresh(req: Request, res: Response, next:NextFunction){
         try{
             const {refreshToken} = req.cookies

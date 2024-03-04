@@ -85,7 +85,10 @@ export  class TokenService {
         }
     }
 
-
+    static async removeToken(refreshToken:string){
+        const token = TokenModel.deleteOne({refreshToken})
+        return token
+    }
     static async findToken(refreshToken: string): Promise<IToken | null>{
         const token = await TokenModel.findOne({refreshToken}).exec();
         if(!token){

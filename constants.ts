@@ -14,8 +14,8 @@ export const COOKIE_SETTINGS: {
       maxAge: REFRESH_TOKEN_EXPIRATION * 1000, // Convert seconds to milliseconds
       sameSite: 'none',
       secure: true, // Remember, SameSite=None requires Secure=true, especially important for production
-      path: '/',
-      domain: 'http://localhost:5173'
+      path: '/'
+     
       
   },
 };

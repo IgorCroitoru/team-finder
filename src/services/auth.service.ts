@@ -11,6 +11,7 @@ import { IOrganization } from "../shared/interfaces/organization.interface";
 import {generateInvitationToken} from "../shared/utils/index"
 import mongoose from "mongoose";
 import { IInvitation } from "../shared/interfaces/invite.interface";
+import { InvitationService } from "./invitation.service";
 dotenv.config()
 export class AuthService{
   constructor(){}
@@ -83,9 +84,8 @@ export class AuthService{
   }
   static async register(_user:IUser, invitationToken: string): Promise<any>{
     if(!invitationToken ) throw Errors.UnauthorizedError
-    if(!TokenService.isValidInvitationToken(invitationToken)) throw Errors.InvalidInvitation
+    if(!InvitationService.isValidInvitationToken(invitationToken)) throw Errors.InvalidInvitation
     const candidate =await UserModel.findOne({email:_user.email}).exec()
-    console.log(candidate)
     if(candidate){
       throw Errors.UserExist;
     }
@@ -94,7 +94,7 @@ export class AuthService{
     _user.password = hashPassword;
     _user.roles = [RoleType.EMPLOYEE]
     _user.organizationId = invitationDetails.organizationId
-    const user = await UserModel.create(_user);
+    const user = await (await UserModel.create(_user));
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({...userDto})
     await TokenService.createToken({refreshToken: tokens.refreshToken, userId: user._id })

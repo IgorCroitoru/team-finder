@@ -44,16 +44,7 @@ export  class TokenService {
             throw e
         }
      }
-     static isValidInvitationToken(token: string): boolean{
-        try{
-            const user = jwt.verify(token, String(process.env.JWT_SIGNUP_SECRET))
-            if(user) return true
-            return false
-        }
-        catch(e){
-            return false
-        }
-     }
+     
 
      static isValidRefreshToken(token: string): boolean{
         try{
@@ -64,7 +55,7 @@ export  class TokenService {
         catch(err) {return false}
         
     }
-
+    
     static validateRefreshToken(token:string){
         try{
             const userData = jwt.verify(token, String(process.env.JWT_REFRESH_SECRET));

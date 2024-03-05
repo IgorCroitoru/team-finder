@@ -14,22 +14,22 @@ import cors from 'cors'
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//app.use(cors({credentials:true, origin: "http://localhost:5173"}))
-app.use((req, res, next) => {
-  const allowedOrigins = [/^http:\/\/localhost:\d+$/];
-  const origin = req.headers.origin;
+app.use(cors({credentials:true, origin: "*"}))
+// app.use((req, res, next) => {
+//   const allowedOrigins = [/^http:\/\/localhost:\d+$/];
+//   const origin = req.headers.origin;
 
-  // Check if the origin matches any pattern in the allowedOrigins
-  if (origin && allowedOrigins.some(pattern => pattern.test(origin))) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+//   Check if the origin matches any pattern in the allowedOrigins
+//   if (origin && allowedOrigins.some(pattern => pattern.test(origin))) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
 
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+//   res.setHeader('Access-Control-Allow-Credentials', 'true');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+//   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
-  next();
-});
+//   next();
+// });
 app.use(cookieParser());
 app.use(express.json());
 app.use(Fingerprint());

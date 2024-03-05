@@ -39,7 +39,7 @@ app.use('/user', Routes.userRoute);
 app.use('/token',Routes.invRoute )
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.LOCAL_MONGO))
+mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);

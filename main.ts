@@ -10,6 +10,7 @@ import errorMiddleware from './src/middlewares/errorMiddleWare'
 import authRoute from './src/routes/auth.route'
 import Routes from "./src/routes"
 import cors from 'cors'
+import { deserialize } from './src/middlewares/deserialization';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,13 +32,14 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 app.use(express.json());
-app.use(Fingerprint());
+app.use(deserialize);
 app.use('/auth',Routes.authRoute)
-app.use('/admin',Routes.adminRoute )
+app.use('/admin',Routes.adminRoute)
 app.use('/user', Routes.userRoute);
+app.use('/token',Routes.invRoute )
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.REMOTE_MONGO))
+mongoose.connect(String(process.env.LOCAL_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);

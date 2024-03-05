@@ -32,7 +32,6 @@ export class UserController{
     static async refresh(req: Request, res: Response, next:NextFunction){
         try{
             const {refreshToken} = req.cookies
-            console.log(refreshToken)
             const userData = await UserService.refresh(refreshToken)
             res.cookie('refreshToken', userData.refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN)
             return res.json(userData);
@@ -59,57 +58,7 @@ export class UserController{
        
        
     }
-    static async generateInvitation(req: Request, res: Response, next:NextFunction){
-        try{
-            let accessToken;
-            let inviteToken;
-            if (req.headers.authorization){
-                accessToken = req.headers.authorization.split(' ')[1];
-            }
-           
-            else{
-                throw Errors.UnauthorizedError
-            }
-            const userData = TokenService.decodeToken(accessToken);
-            if(!userData){
-                return res.json({success:false})
-            }
-            inviteToken = await InvitationService.create(userData._id, userData.organization)
-            res.json({success:true, inviteToken});
-        }
-        catch(e){
-            next(e)
-        }
-    }
-    static async adminRegistration(req: Request, res: Response, next:NextFunction){
-       try{
-        const organization:IOrganization = {
-            name: req.body.organizationName,
-            hq_address: req.body.hq_address,
-            departmentsId: [],
-            adminsId: []
-        }
-        const user:IUser = {
-            email:req.body.email,
-            name: req.body.name,
-            password: req.body.password,
-            roles: [RoleType.ADMIN],
-        }
-        const userData = await AuthService.adminRegistration(user, organization)
-        res.cookie('refreshToken', userData.refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN)
-        res.json({
-                success: true,
-                data: userData 
-                    })
-        }
-        catch(error){
-            console.log(error)
-            next(error)
-        }
-       
-       
-       
-    }
+    
     static async register(req: Request, res: Response, next:NextFunction){
         try{
             const user:IUser = {

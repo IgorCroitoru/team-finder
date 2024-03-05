@@ -25,7 +25,6 @@ export class CustomError extends Error {
   export const Errors = {
     CustomError,
     BadParams: new CustomError('Improper Parameter Structure', 1, 400),
-    InvalidInspect: new CustomError('Invalid Inspect Link Structure', 2, 400),
     MaxRequests: new CustomError('You have too many pending requests', 3, 400),
     BadRequest: new CustomError('Bad request', 5, 400),
     GenericBad: new CustomError('Something went wrong on our end, please try again', 6, 500),

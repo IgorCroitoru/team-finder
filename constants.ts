@@ -15,6 +15,7 @@ export const COOKIE_SETTINGS: {
       sameSite: 'none',
       secure: true, // Remember, SameSite=None requires Secure=true, especially important for production
       path: '/',
+      domain: 'http://localhost:5173'
       
   },
 };

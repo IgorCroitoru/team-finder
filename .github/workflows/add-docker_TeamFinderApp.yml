@@ -41,6 +41,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: TeamFinderApp
-        slot-name: staging
+        slot-name: production
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_a166ae6ccede436fbaffa93a3a95efaa }}
         images: igorcroitoru/teamfinder:${{ github.sha }}

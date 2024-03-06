@@ -3,7 +3,7 @@ name: Build and deploy container app to Azure Web App - TeamFinderApp
 on:
   push:
     branches:
-      - add-docker
+      - main
   workflow_dispatch:
 
 jobs:
@@ -41,6 +41,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: TeamFinderApp
-        slot-name: production
+        slot-name: staging
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_a166ae6ccede436fbaffa93a3a95efaa }}
         images: igorcroitoru/teamfinder:${{ github.sha }}

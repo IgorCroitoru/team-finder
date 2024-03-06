@@ -15,6 +15,9 @@ dotenv.config()
 
 export class UserService {
 
+    static async me(){
+        
+    }
     static async logout(refreshToken:string){
         const token = await TokenService.decodeToken(refreshToken)
         return token

@@ -15,7 +15,7 @@ export class InvitationController {
             if(!inv){
                 throw Errors.InvalidInvitation
             }
-            res.json({success: true})
+            res.json({success: true, details: inv})
         }
         catch(e)
         {

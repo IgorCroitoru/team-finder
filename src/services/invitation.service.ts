@@ -28,14 +28,23 @@ export class InvitationService {
     static async validate(token: string){
         try{
             const inv = jwt.verify(token, String(process.env.JWT_SIGNUP_SECRET)) as JwtPayload
-            const invDb = await InvitationModel.findOne({token: token}).exec()
-            if(inv&&invDb){
-                return true
+            if(!inv){
+                return null
             }
-            return false
+            const invDb = await InvitationModel
+                .findOne({token: token})
+                .select('inviterId')
+                .populate({path: 'organizationId', select: 'name'})
+                .populate({path: 'inviterId', select: 'name'}).exec()
+            if(invDb){
+                
+                return invDb
+                
+            }
+            return null
         }
         catch(e){
-            return false
+            return null
         }
     }
 }

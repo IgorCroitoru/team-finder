@@ -10,11 +10,31 @@ import { RoleType } from "../shared/enums";
 import { IOrganization } from "../shared/interfaces/organization.interface";
 import {generateInvitationToken} from "../shared/utils/index"
 import mongoose from "mongoose";
+import { IInvitation } from "../shared/interfaces/invite.interface";
+import { InvitationService } from "./invitation.service";
 dotenv.config()
 export class AuthService{
   constructor(){}
 
   
+
+  static async login(email: string, password: string){
+    const user:IUser | null = await UserModel.findOne({email}).exec()
+    if(!user){
+      throw Errors.UserDoesNotExist
+    }
+    const isEquals = await bcrypt.compare(password, user.password)
+    if(!isEquals){
+      throw Errors.BadCredentials
+    }
+    const userDto = new UserDto(user);
+    const tokens = TokenService.generateTokens({ ...userDto });
+      
+    await TokenService.createToken({ refreshToken: tokens.refreshToken, userId: user._id });
+    
+    return { ...tokens, user: userDto };
+  }
+
   static async adminRegistration(user: IUser, organization: IOrganization) {
     const candidate = await UserModel.findOne({email:user.email}).exec()
     if(candidate){
@@ -62,15 +82,19 @@ export class AuthService{
      // session.endSession();
     }
   }
-  static async register(_user:IUser): Promise<any>{
+  static async register(_user:IUser, invitationToken: string): Promise<any>{
+    if(!invitationToken ) throw Errors.UnauthorizedError
+    if(!InvitationService.isValidInvitationToken(invitationToken)) throw Errors.InvalidInvitation
     const candidate =await UserModel.findOne({email:_user.email}).exec()
     if(candidate){
       throw Errors.UserExist;
     }
+    const invitationDetails = TokenService.decodeToken(invitationToken) as IInvitation
     const hashPassword = await bcrypt.hash(_user.password,Number(process.env.ROUNDS) || 10)
     _user.password = hashPassword;
     _user.roles = [RoleType.EMPLOYEE]
-    const user = await UserModel.create(_user);
+    _user.organizationId = invitationDetails.organizationId
+    const user = await (await UserModel.create(_user));
     const userDto = new UserDto(user);
     const tokens = TokenService.generateTokens({...userDto})
     await TokenService.createToken({refreshToken: tokens.refreshToken, userId: user._id })

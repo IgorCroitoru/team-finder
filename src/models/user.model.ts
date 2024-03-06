@@ -10,6 +10,7 @@ const UserSchema = new Schema<IUserDoc>({
     password: { type: String, required: true },
     name: { type: String, required: true },
     departmentId: {type: String, default: ''},
+    organizationId: {type: Schema.Types.ObjectId, ref: 'Organization'},
     roles: [{ 
       type: Number, 
       enum: Object.values(RoleType).filter(value => typeof value === 'number'), 

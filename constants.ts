@@ -1,10 +1,24 @@
-export const COOKIE_SETTINGS = {
-    REFRESH_TOKEN: {
+import { CookieOptions } from "express";
+// DECLARED IN SECONDS FOR USING IN JWT
+export const ACCESS_TOKEN_EXPIRATION = 30*60; // (30m)
+export const INVITATION_LINK_EXPIRATION = 60*60*24*7; // 7D
+export const REFRESH_TOKEN_EXPIRATION = 60*60*24*15 //15D
+
+
+
+export const COOKIE_SETTINGS: {
+  REFRESH_TOKEN: CookieOptions;
+} = {
+  REFRESH_TOKEN: {
       httpOnly: true,
-      maxAge: 6048e5, // 7 * 24 * 3600 * 1000 (7d)
-    },
-  };
+      maxAge: REFRESH_TOKEN_EXPIRATION * 1000, // Convert seconds to milliseconds
+      sameSite: 'none',
+      secure: true, // Remember, SameSite=None requires Secure=true, especially important for production
+      path: '/'
+     
+      
+  },
+};
   
-  export const ACCESS_TOKEN_EXPIRATION = 18e5; // 1800 * 1000 (30m)
-  export const INVITATION_LINK_EXPIRATION = 1000*60*60*24*7; // 7D
-  export const REFRESH_TOKEN_EXPIRATION = 1000*60*60*24*15 //15D
+  //In seconds
+  

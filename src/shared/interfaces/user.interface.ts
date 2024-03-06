@@ -11,9 +11,9 @@ export interface IUser {
     name: string
     availableHours?: number
     skills?: IUserSkill[]
-    departmentId?: string
+    departmentId?: string | mongoose.Schema.Types.ObjectId
     roles?: RoleType[]
-    organizationId?: string
+    organizationId?: string | mongoose.Schema.Types.ObjectId
     //projects:
   }
 

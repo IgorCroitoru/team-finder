@@ -1,0 +1,46 @@
+name: Build and deploy container app to Azure Web App - TeamFinderApp
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: docker.io
+        username: igorcroitoru
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Build and push container image to Docker Hub
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: igorcroitoru/teamfinder:${{ github.sha }}
+        file: ./Dockerfile
+        build-args: |
+          PORT=${{ secrets.PORT }}
+          REMOTE_MONGO=${{ secrets.REMOTE_MONGO }}
+          ROUNDS=${{ secrets.ROUNDS }}
+          JWT_ACCESS_SECRET=${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET=${{ secrets. JWT_REFRESH_SECRET }}
+          JWT_SIGNUP_SECRET=${{ secrets.JWT_SIGNUP_SECRET }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: TeamFinderApp
+        slot-name: staging
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_a166ae6ccede436fbaffa93a3a95efaa }}
+        images: igorcroitoru/teamfinder:${{ github.sha }}

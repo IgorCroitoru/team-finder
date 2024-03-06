@@ -3,3 +3,4 @@ node_modules/
 dist/
 repository/
 for-front.js
+testing.js

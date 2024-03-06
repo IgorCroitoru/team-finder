@@ -15,6 +15,8 @@ import { deserialize } from './src/middlewares/deserialization';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const apiRoutes = express.Router();
+
 //app.use(cors({credentials:true, origin: "*"}))
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -33,10 +35,13 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 app.use(express.json());
 app.use(deserialize);
-app.use('/auth',Routes.authRoute)
-app.use('/admin',Routes.adminRoute)
-app.use('/user', Routes.userRoute);
-app.use('/token',Routes.invRoute )
+
+apiRoutes.use('/auth',Routes.authRoute)
+apiRoutes.use('/admin',Routes.adminRoute)
+apiRoutes.use('/user', Routes.userRoute);
+apiRoutes.use('/token',Routes.invRoute )
+
+app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 
 mongoose.connect(String(process.env.REMOTE_MONGO))

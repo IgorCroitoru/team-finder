@@ -11,13 +11,14 @@ import mongoose from 'mongoose';
 import { TokenService } from './token.service';
 import { UserModel } from '../models/user.model';
 import {IUser} from "../shared/interfaces/user.interface"
+import { RoleType } from '../shared/enums';
 dotenv.config()
 
 export class UserService {
 
-    static async me(){
-        
-    }
+    
+
+   
     static async logout(refreshToken:string){
         const token = await TokenService.decodeToken(refreshToken)
         return token
@@ -25,12 +26,12 @@ export class UserService {
 
     static async refresh(refreshToken: string){
         if(!refreshToken){
-            throw Errors.UnauthorizedError
+            throw Errors.ForbiddenError
         }
         const userData = TokenService.validateRefreshToken(refreshToken)
         const tokenFromDb = await TokenService.findToken(refreshToken)
         if(!userData || !tokenFromDb){
-            throw Errors.UnauthorizedError
+            throw Errors.ForbiddenError
         }
         const user:IUser | null = await UserModel.findById(userData._id);
         if(!user){

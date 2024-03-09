@@ -12,8 +12,40 @@ import { Errors } from '../exceptions/api.error';
 import { InvitationService } from '../services/invitation.service';
 import { UserDto } from '../shared/dtos/user.dto';
 import { AdminService } from '../services/admin.service';
-
+import { resolveRole } from '../shared/utils';
 export class AdminController{
+
+    static async setRole(req: Request, res: Response, next:NextFunction)
+    {
+        try {
+            const roleUpdate = req.body
+            const {userId, role} = roleUpdate
+            const resolvedRole = resolveRole(role)
+            if(userId&&resolvedRole)
+            {
+                const updatedUser = await AdminService.setRole(userId, resolvedRole)
+                return res.json({success: true, user: updatedUser})
+            }
+            throw Errors.BadRequest
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async deleteRole(req: Request, res: Response, next:NextFunction){
+        try {
+            const request = req.body;
+            const {userId, role} = request
+            const resolvedRole = resolveRole(role)
+            if(!resolvedRole){
+                throw Errors.BadRequest
+            }
+            const user = await AdminService.deleteRole(userId, resolvedRole)
+            return res.json({success:true, user})
+            
+        } catch (error) {
+            next(error)
+        }
+    }
 
     static async getUsers(req: Request, res: Response, next:NextFunction){
         try {
@@ -23,7 +55,7 @@ export class AdminController{
             const users = await AdminService.getUsers(organizationId, page, pageSize)
             res.json({users})
         } catch (error) {
-            next(e)
+            next(error)
         }
     }
     static async generateInvitation(req: Request, res: Response, next:NextFunction){
@@ -36,7 +68,7 @@ export class AdminController{
             }
            
             else{
-                throw Errors.UnauthorizedError
+                throw Errors.ForbiddenError
             }
             const userData = TokenService.decodeToken(accessToken);
             if(!userData){

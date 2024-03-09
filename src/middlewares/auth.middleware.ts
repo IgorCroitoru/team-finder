@@ -6,16 +6,16 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
     try{
         const authHeader = req.headers.authorization;
         if(!authHeader){
-            return next(Errors.UnauthorizedError)
+            return next(Errors.ForbiddenError)
         }
         const accessToken = authHeader.split(' ')[1]
         if(!accessToken)
         {
-            return next(Errors.UnauthorizedError)
+            return next(Errors.ForbiddenError)
         }
         const userData = TokenService.validateAccessToken(accessToken)
         if(!userData){
-            return next(Errors.UnauthorizedError)
+            return next(Errors.ForbiddenError)
         }
         req.user = userData
         next()

@@ -18,10 +18,68 @@ export class UserService {
 
     
 
-   
+    
     static async logout(refreshToken:string){
         const token = await TokenService.decodeToken(refreshToken)
         return token
+    }
+    static async assignDepartment(userId: string | mongoose.Schema.Types.ObjectId, departmentId: string | mongoose.Schema.Types.ObjectId){
+        const user = await UserModel.findById(userId)
+        if(!user){
+            throw new Errors.CustomError('User not found', 0, 404); 
+        }
+        const departmentIdStr = departmentId.toString();
+        if (user.departmentsId?.map(id => id.toString()).includes(departmentIdStr)) {
+            throw new Errors.CustomError('User is already assigned to this department.', 1, 400);
+        }
+        const newUser = await UserModel.findOneAndUpdate(
+            {_id: userId},
+            {$push: {departmentsId: departmentId}},
+            {new: true}
+        )
+        if (!newUser) {
+            // Handle the unlikely case where the user does not exist at this point
+            throw new Errors.CustomError('Failed to update user with department assignment.', 0, 500);
+        }
+        const userDto = new UserDto(newUser)
+        return userDto; // Optionally return the updated user document
+        
+        
+    }
+    static async getNoneDepartmentUsers(organizationId: string | mongoose.Schema.Types.ObjectId, page = 1, pageSize = 10){
+        const offset = (page - 1) * pageSize;
+        const [users, totalCount] = await Promise.all([
+            UserModel.find({
+                organizationId: organizationId,
+                roles: {$in: [RoleType.EMPLOYEE]},
+                $or: [
+                    {departmentsId: {$exists: false}},
+                    {departmentsId: {$size: 0}}
+                ]
+                
+                })
+                .skip(offset)
+                .limit(pageSize).exec(),
+            UserModel.countDocuments({
+                organizationId:organizationId,
+                roles: {$in: [RoleType.EMPLOYEE]},
+                $or: [
+                    {departmentsId: {$exists: false}},
+                    {departmentsId: {$size: 0}}
+                ]
+            })
+        ])
+        const pagination = {
+            totalRecords: totalCount,
+            pageSize,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount/pageSize)
+        }
+        const usersDto: UserDto[] = users.map((user)=> {
+            return new UserDto(user)
+        })
+        return {usersDto, pagination}
+
     }
 
     static async refresh(refreshToken: string){

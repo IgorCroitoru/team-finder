@@ -34,13 +34,14 @@ app.use((req, res, next) => {
 });
 app.use(cookieParser());
 app.use(express.json());
-app.use(deserialize);
+//app.use(deserialize);
 
 apiRoutes.use('/auth',Routes.authRoute)
 apiRoutes.use('/admin',Routes.adminRoute)
 apiRoutes.use('/user', Routes.userRoute);
 apiRoutes.use('/token',Routes.invRoute )
-
+apiRoutes.use('/department', Routes.departmentRoutes)
+apiRoutes.use('/organization', Routes.organizationRoutes)
 app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 

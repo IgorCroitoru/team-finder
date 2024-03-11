@@ -7,7 +7,7 @@ export class InvitationController {
     static async validate(req: Request, res: Response, next:NextFunction){
         try
         {
-            const token = req.query.token || req.body.token
+            const token = req.query.token || req.body.token || req.params.token
             if(!token){
                 throw Errors.BadRequest
             }

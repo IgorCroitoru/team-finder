@@ -54,7 +54,7 @@ export class AuthService{
       await adminUser.save(); // Save to get an _id
   
       // Step 3: Update references
-      org.adminsId.push(adminUser._id);
+      //org.adminsId.push(adminUser._id);
       org.creator = adminUser._id;
       adminUser.organizationId = org._id;
   

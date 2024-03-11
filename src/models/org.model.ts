@@ -6,7 +6,6 @@ const orgSchema = new Schema<IOrgDoc>({
     hq_address: {type: String, required: true},
     adminsId: [{type: Schema.Types.ObjectId, ref: 'User', required: true, default: []}],
     creator: {type: Schema.Types.ObjectId, ref: 'User', required: false}
-    //departmentsId: [{type: Schema.Types.ObjectId, ref: 'User', required: true, default: []}]
    
 },
  { timestamps: true})

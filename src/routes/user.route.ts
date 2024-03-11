@@ -9,4 +9,5 @@ router.post('/logout', UserController.logout)
 router.get('/me',authMiddleware, (req: Request, res: Response)=>{
     res.json({success:true})
 } )
+router.get('/no-department-users', authMiddleware, UserController.getNoneDepartmentUsers)
 export default router;

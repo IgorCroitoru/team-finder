@@ -13,7 +13,8 @@ const SkillSchema = new Schema<ISkillDoc>({
     type: Schema.Types.ObjectId, 
     ref: 'Category', 
     required: true 
-  }
+  },
+  departments: [{type:Schema.Types.ObjectId, ref: 'Department', required: false, default:[] }]
 });
 
 const CategorySchema = new Schema<ICategoryDoc>({

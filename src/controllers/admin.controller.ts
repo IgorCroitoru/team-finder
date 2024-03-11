@@ -47,17 +47,7 @@ export class AdminController{
         }
     }
 
-    static async getUsers(req: Request, res: Response, next:NextFunction){
-        try {
-            const organizationId = req.user!.organization!
-            const page = parseInt(req.query.page as string) || 1;
-            const pageSize = parseInt(req.query.pageSize as string) || 10;
-            const users = await AdminService.getUsers(organizationId, page, pageSize)
-            res.json({users})
-        } catch (error) {
-            next(error)
-        }
-    }
+    
     static async generateInvitation(req: Request, res: Response, next:NextFunction){
         try{
             

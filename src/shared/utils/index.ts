@@ -24,5 +24,5 @@ export function resolveRole(role: number | string): RoleType | undefined {
     );
     return matchingRole ? RoleType[matchingRole[0] as keyof typeof RoleType] : undefined;
   }
-  return undefined;
+  return;
 }

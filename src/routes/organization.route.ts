@@ -4,5 +4,5 @@ import { authMiddleware } from '../middlewares/auth.middleware'
 const router = Router()
 
 router.get('/users', authMiddleware, OrganizationController.getUsers)
-
+router.get('/non-department-users', authMiddleware, OrganizationController.getNoneDepartmentUsers)
 export default router

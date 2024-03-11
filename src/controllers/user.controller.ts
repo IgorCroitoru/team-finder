@@ -78,15 +78,5 @@ export class UserController{
             next(e)
         }
     }
-    static async getNoneDepartmentUsers(req: Request, res: Response, next:NextFunction){
-        try {
-            const organizationId = req.user!.organization!
-            const page = parseInt(req.query.page as string) || 1;
-            const pageSize = parseInt(req.query.pageSize as string) || 10;
-            const users = await UserService.getNoneDepartmentUsers(organizationId, page, pageSize)
-            res.json({...users})
-        } catch (error) {
-            next(error)
-        }
-    }
+    
 }

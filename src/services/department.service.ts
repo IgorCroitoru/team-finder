@@ -10,8 +10,9 @@ import { UserService } from "./user.service";
 export class DepartmentService{
     static async create(_department: IDepartment){
         const managerId = _department.manager;
+        let user;
         if(managerId){
-            const user = await UserModel.findById(managerId).exec()
+            user = await UserModel.findById(managerId).exec()
             if (!user) {
                 throw new Errors.CustomError('User not found', 0, 404); 
             }
@@ -24,6 +25,12 @@ export class DepartmentService{
             }
         }
         const department = await DepartmentModel.create(_department)
+        if(!department){
+            throw new Errors.CustomError('Error creating department', 0, 500)
+        }
+        if(user){
+            await user.updateOne({$addToSet: {departmentsId: department._id}})
+        }
         const departmentDto = new DepartmentDto(department)
         return departmentDto
     }
@@ -84,15 +91,16 @@ export class DepartmentService{
         if(depart){
             throw new Errors.CustomError(`User is already a manager in ${depart.name}` ,0,400)
         }
+      
         const department = await DepartmentModel.findOneAndUpdate(
             {_id: departmentId},
             {$set: {manager: managerId}},
-            {new: true})
+            {new: true}).exec()
         if(!department){
             throw new Errors.CustomError('Error creating department', 0 , 500)
         }
-        await user.updateOne({$push: {departmentsId: departmentId}}).exec()
-        //await user.save();
+        user.updateOne({$addToSet: {departmentsId: departmentId}})
+        await user.save();
         //await UserService.assignDepartment(managerId, departmentId);
 
         

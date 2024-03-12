@@ -6,7 +6,8 @@ const router = Router();
 router.post('/create', authMiddleware, DepartmentController.create)
 router.put('/:departmentId/set-manager',authMiddleware, DepartmentController.setManager)
 router.put('/:departmentId/delete-manager',authMiddleware, DepartmentController.deleteManager)
-router.get('/get-departments', authMiddleware, DepartmentController.getDepartments)
 router.delete('/delete-department/:departmentId', authMiddleware, DepartmentController.deleteDepartment)
-
+router.get('/:departmentId/get-employees', authMiddleware, DepartmentController.getEmployees)
+router.post('/:departmentId/add-user',authMiddleware,DepartmentController.addUser)
+router.put('/:departmentId/delete-user',authMiddleware,DepartmentController.deleteUser)
 export default router

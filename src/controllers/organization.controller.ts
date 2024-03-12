@@ -24,4 +24,15 @@ export class OrganizationController {
             next(error)
         }
     }
+    static async getDepartments(req: Request, res: Response, next:NextFunction){
+        try{
+            const organizationId = req.user!.organization!
+            const page = parseInt(req.query.page as string) || 1;
+            const pageSize = parseInt(req.query.pageSize as string) || 10;
+            const departments = await OrganizationService.getDepartments(organizationId,page, pageSize)
+            res.json({...departments})
+        }catch(error){
+            next(error)
+        }
+    }
 }

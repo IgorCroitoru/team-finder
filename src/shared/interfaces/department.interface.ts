@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IDepartment {
-    _id?: string | mongoose.Schema.Types.ObjectId
+    _id?: any
     name: string
     skills?: string[] | mongoose.Schema.Types.ObjectId[]
     manager?: string | mongoose.Schema.Types.ObjectId,

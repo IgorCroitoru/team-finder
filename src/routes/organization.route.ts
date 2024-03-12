@@ -5,4 +5,5 @@ const router = Router()
 
 router.get('/users', authMiddleware, OrganizationController.getUsers)
 router.get('/non-department-users', authMiddleware, OrganizationController.getNoneDepartmentUsers)
+router.get('/get-departments', authMiddleware, OrganizationController.getDepartments)
 export default router

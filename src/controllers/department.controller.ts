@@ -23,7 +23,7 @@ export class DepartmentController{
         try{
             const departmentId = req.params.departmentId;
             const depManager = req.body.manager
-            const department = await DepartmentService.setManager(departmentId, depManager);
+            const department = await DepartmentService.setManager(departmentId,depManager);
             res.json({success:true, department})
         }catch(error){
             next(error)
@@ -38,22 +38,43 @@ export class DepartmentController{
             next(error)
         }
     }
-    static async getDepartments(req: Request, res: Response, next:NextFunction){
+    
+    static async deleteDepartment(req: Request, res: Response, next:NextFunction){
+        try {
+            const organizationId = req.user.organization
+            const departmentId = req.params.departmentId || req.body.departmentId 
+            const deletedId = await DepartmentService.deleteDepartment(departmentId, organizationId)
+            res.json({success: true, deletedId})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async getEmployees(req: Request, res: Response, next:NextFunction){
+        try {
+            const organizationId = req.user.organization
+            const departmentId = req.params.departmentId || req.body.departmentId 
+            const users = await DepartmentService.getEmployees(departmentId, organizationId)
+            res.json({...users})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async addUser(req: Request, res: Response, next:NextFunction){
         try{
-            const organizationId = req.user!.organization!
-            const page = parseInt(req.query.page as string) || 1;
-            const pageSize = parseInt(req.query.pageSize as string) || 10;
-            const departments = await DepartmentService.getDepartments(organizationId,page, pageSize)
-            res.json({...departments})
+            const departmentId = req.params.departmentId
+            const userId = req.body.userId
+            await DepartmentService.addUser(departmentId, userId)
+            res.json({success:true})
         }catch(error){
             next(error)
         }
     }
-    static async deleteDepartment(req: Request, res: Response, next:NextFunction){
+    static async deleteUser(req: Request, res: Response, next:NextFunction){
         try {
-            const departmentId = req.params.departmentId || req.body.departmentId 
-            const deletedId = await DepartmentService.deleteDepartment(departmentId)
-            res.json({success: true, deletedId})
+            const departmentId = req.params.departmentId
+            const userId = req.body.userId
+            await DepartmentService.deleteUser(departmentId, userId)
+            res.json({success:true})
         } catch (error) {
             next(error)
         }

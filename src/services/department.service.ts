@@ -56,7 +56,7 @@ export class DepartmentService{
         }
         await UserModel.findOneAndUpdate(
             {_id: dep.manager},
-            {$unset: {departmentId:''}},
+            { $set: { departmentId: null } },
             {new: true}
             )
         const depDto = new DepartmentDto(dep)
@@ -100,7 +100,7 @@ export class DepartmentService{
         await UserModel.updateMany(
             {organizationId: organizationId,
              departmentId: departmentId },
-            { $unset: { departmentId: "" } }
+             { $set: { departmentId: null } }
         );
         return deletedDepartment._id
     }
@@ -158,7 +158,7 @@ export class DepartmentService{
         }
         const updatedUser = await UserModel.findByIdAndUpdate(
             userId,
-            { $unset: { departmentId: "" } }, // Remove the departmentId from the user document
+            { $set: { departmentId: null } }, // Remove the departmentId from the user document
             { new: true }
           );
       

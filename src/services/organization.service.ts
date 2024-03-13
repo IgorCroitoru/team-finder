@@ -5,19 +5,20 @@ import { UserDto } from "../shared/dtos/user.dto";
 import { RoleType } from "../shared/enums";
 
 export class OrganizationService{
-    static async getUsers(organizationId: string| mongoose.Schema.Types.ObjectId, page = 1, pageSize = 10){
-        const offset = (page - 1) * pageSize;
+    static async getUsers(query: any, pageNumber = 1, pageSizeNumber = 10){
+        const offset = (pageNumber - 1) * pageSizeNumber;
+        
         const [users, totalCount] =  await Promise.all([
-            UserModel.find({organizationId: organizationId})
-                .select('email name departmentsId skills roles availableHours')
+            UserModel.find(query)
+                .select('email name departmentId skills roles availableHours')
                 .skip(offset)
-                .limit(pageSize).exec(),
-            UserModel.countDocuments({organizationId: organizationId})
+                .limit(pageSizeNumber).exec(),
+            UserModel.countDocuments(query)
             ])
             const pagination = {
                 totalRecords: totalCount,
-                currentPage: page,
-                totalPages: Math.ceil(totalCount/pageSize)
+                currentPage: pageNumber,
+                totalPages: Math.ceil(totalCount/pageSizeNumber)
             }
         return {users, pagination};
 
@@ -29,20 +30,20 @@ export class OrganizationService{
                 organizationId: organizationId,
                 roles: {$in: [RoleType.EMPLOYEE]},
                 $or: [
-                    {departmentsId: {$exists: false}},
-                    {departmentsId: {$size: 0}}
-                ]
+                    { departmentId: null }, // Matches documents where departmentId is explicitly set to null
+                    { departmentId: { $exists: false } } // Matches documents where departmentId does not exist
+                  ]
                 
                 })
                 .skip(offset)
                 .limit(pageSize).exec(),
             UserModel.countDocuments({
-                organizationId:organizationId,
+                organizationId: organizationId,
                 roles: {$in: [RoleType.EMPLOYEE]},
                 $or: [
-                    {departmentsId: {$exists: false}},
-                    {departmentsId: {$size: 0}}
-                ]
+                    { departmentId: null }, // Matches documents where departmentId is explicitly set to null
+                    { departmentId: { $exists: false } } // Matches documents where departmentId does not exist
+                  ]
             })
         ])
         const pagination = {

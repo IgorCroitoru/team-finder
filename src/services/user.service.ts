@@ -23,29 +23,29 @@ export class UserService {
         const token = await TokenService.decodeToken(refreshToken)
         return token
     }
-    // static async assignDepartment(userId: string | mongoose.Schema.Types.ObjectId, departmentId: string | mongoose.Schema.Types.ObjectId){
-    //     const user = await UserModel.findById(userId)
-    //     if(!user){
-    //         throw new Errors.CustomError('User not found', 0, 404); 
-    //     }
-    //     const departmentIdStr = departmentId.toString();
-    //     if (user.departmentsId?.map(id => id.toString()).includes(departmentIdStr)) {
-    //         throw new Errors.CustomError('User is already assigned to this department.', 1, 400);
-    //     }
-    //     const newUser = await UserModel.findOneAndUpdate(
-    //         {_id: userId},
-    //         {$push: {departmentsId: departmentId}},
-    //         {new: true}
-    //     )
-    //     if (!newUser) {
-    //         // Handle the unlikely case where the user does not exist at this point
-    //         throw new Errors.CustomError('Failed to update user with department assignment.', 0, 500);
-    //     }
-    //     const userDto = new UserDto(newUser)
-    //     return userDto; // Optionally return the updated user document
+    static async assignDepartment(userId: string | mongoose.Schema.Types.ObjectId, departmentId: string | mongoose.Schema.Types.ObjectId){
+        const user = await UserModel.findById(userId)
+        if(!user){
+            throw new Errors.CustomError('User not found', 0, 404); 
+        }
+        const departmentIdStr = departmentId.toString();
+        if (user.departmentId === departmentIdStr) {
+            throw new Errors.CustomError('User is already assigned to this department.', 1, 400);
+        }
+        const newUser = await UserModel.findOneAndUpdate(
+            {_id: userId},
+            {$set: {departmentId: departmentId}},
+            {new: true}
+        )
+        if (!newUser) {
+            // Handle the unlikely case where the user does not exist at this point
+            throw new Errors.CustomError('Failed to update user with department assignment.', 0, 500);
+        }
+        const userDto = new UserDto(newUser)
+        return userDto; // Optionally return the updated user document
         
         
-    // }
+    }
     static async me(userId: string |mongoose.Schema.Types.ObjectId ){
         const userData = await UserModel.findById(userId)
 

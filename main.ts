@@ -13,6 +13,7 @@ import cors from 'cors'
 import { deserialize } from './src/middlewares/deserialization';
 import { AdminService } from './src/services/admin.service';
 import { ITeamRole } from './src/shared/interfaces/teamrole.interface';
+import { UserModel } from './src/models/user.model';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,4 +52,6 @@ mongoose.connect(String(process.env.REMOTE_MONGO))
 mongoose.set('debug', true)
 app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);
+  
 });
+

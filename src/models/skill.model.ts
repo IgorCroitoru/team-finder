@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Experience, SkillLevel } from '../shared/enums';
 import { IUserSkill,ISkill, ICategory } from '../shared/interfaces/skill.interface';
+import { Organization } from './org.model';
 
 interface ISkillDoc extends ISkill, Document{}
 interface ICategoryDoc extends ICategory, Document{}
 interface IUserSkillDoc extends IUserSkill, Document{}
 const SkillSchema = new Schema<ISkillDoc>({
-  name: { type: String, required: true },
+  name: { type: String, required: true,index:true },
+  organizationId: {type: Schema.Types.ObjectId, ref: 'Organization'},
   authorId: { type: Schema.Types.ObjectId, ref: 'User' },
   description: { type: String, required: true },
   categoryId: { 
@@ -37,6 +39,6 @@ const UserSkillSchema = new Schema<IUserSkillDoc>({
   confirmedById: { type: Schema.Types.ObjectId, ref: 'User', required: true }
   });
   
-export const UserSkill = mongoose.model('UserSkill', UserSkillSchema);  
+export const UserSkill = mongoose.model<IUserSkillDoc>('UserSkill', UserSkillSchema);  
 export const Category = mongoose.model<ICategoryDoc>('Category', CategorySchema);
 export const Skill = mongoose.model<ISkillDoc>('Skill', SkillSchema);

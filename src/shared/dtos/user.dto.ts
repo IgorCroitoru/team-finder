@@ -8,13 +8,13 @@ export class UserDto {
     name: string;
     roles?: RoleType[];
     organization?: string ;
-    departments?: string[]
+    department?: string 
     constructor(user: IUser){
         this._id = user._id
         this.email = user.email
         this.name = user.name
         this.roles = user.roles
         this.organization = user.organizationId?.toString()
-        this.departments = user.departmentsId?.map((d)=>{return d.toString()})
+        this.department = user.departmentId?.toString();
     }
 }

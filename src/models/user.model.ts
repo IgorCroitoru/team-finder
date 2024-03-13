@@ -9,7 +9,7 @@ const UserSchema = new Schema<IUserDoc>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    departmentsId: [{type: Schema.Types.ObjectId, ref: 'Department', default:[]}],
+    departmentId: {type: Schema.Types.ObjectId, ref: 'Department'},
     organizationId: {type: Schema.Types.ObjectId, ref: 'Organization'},
     roles: [{ 
       type: Number, 

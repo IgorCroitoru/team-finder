@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Errors } from "../exceptions/api.error";
+import { CustomError, Errors } from "../exceptions/api.error";
 import { DepartmentModel } from "../models/department.model";
 import { UserModel } from "../models/user.model";
 import { DepartmentDto } from "../shared/dtos/department.dto";
@@ -30,7 +30,7 @@ export class DepartmentService{
             throw new Errors.CustomError('Error creating department', 0, 500)
         }
         if(user){
-            await user.updateOne({$addToSet: {departmentsId: department._id}})
+            await user.updateOne({departmentId: department._id})
         }
         const departmentDto = new DepartmentDto(department)
         return departmentDto
@@ -56,7 +56,7 @@ export class DepartmentService{
         }
         await UserModel.findOneAndUpdate(
             {_id: dep.manager},
-            {$pull: {departmentsId:dep._id}},
+            {$unset: {departmentId:''}},
             {new: true}
             )
         const depDto = new DepartmentDto(dep)
@@ -84,7 +84,7 @@ export class DepartmentService{
         if(!department){
             throw new Errors.CustomError('Error creating department', 0 , 500)
         }
-        user.updateOne({$addToSet: {departmentsId: departmentId}})
+        user.updateOne({departmentId: departmentId})
         await user.save();
         //await UserService.assignDepartment(managerId, departmentId);
 
@@ -99,8 +99,8 @@ export class DepartmentService{
         }
         await UserModel.updateMany(
             {organizationId: organizationId,
-             departmentsId: departmentId },
-            { $pull: { departmentsId: departmentId } }
+             departmentId: departmentId },
+            { $unset: { departmentId: "" } }
         );
         return deletedDepartment._id
     }
@@ -109,13 +109,13 @@ export class DepartmentService{
         const [users, totalCount] = await Promise.all([
             UserModel.find({
                 organizationId: organizationId,
-                departmentsId: {$in: [departmentId]}
+                departmentId: departmentId
                 })
                 .skip(offset)
                 .limit(pageSize).exec(),
             UserModel.countDocuments({
                 organizationId: organizationId,
-                departmentsId: {$in: departmentId},
+                departmentId: departmentId,
                 roles: {$in: RoleType.EMPLOYEE}
             })
             ])
@@ -139,30 +139,36 @@ export class DepartmentService{
         if(!user){
             throw new Errors.CustomError('User not found',0,404)
         }
-        if(user.departmentsId && user.departmentsId?.map((id)=>id.toString()).includes(departmentId.toString())){
-            throw new Errors.CustomError('User already in this department',0,400)
+        if(user.departmentId){
+            throw new Errors.CustomError('User is already in a department',0,400)
         }
 
+
         await user.updateOne(
-            {$addToSet: {departmentsId: departmentId}}
-            )
+            {departmentId: departmentId})
         //await user.save()
         
         return new UserDto(user)
 
     }
     static async deleteUser(departmentId: string | mongoose.Schema.Types.ObjectId, userId: string | mongoose.Schema.Types.ObjectId){
-        const user = await UserModel.findOneAndUpdate(
-           { _id: userId},
-           {$pull: {departmentsId: departmentId}},
-           {new:true}
-            
-        )
+        const user = await UserModel.findOne({ _id: userId, departmentId: departmentId });
         if(!user){
-            throw new Errors.CustomError('User not found',0,404)
-
+            throw new CustomError('User not found or does not belong to the department', 0, 404)
         }
-        return new UserDto(user)
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            userId,
+            { $unset: { departmentId: "" } }, // Remove the departmentId from the user document
+            { new: true }
+          );
+      
+          // If the user could not be updated, throw an error
+          if (!updatedUser) {
+            throw new Errors.CustomError('Error updating user', 0, 500);
+          }
+          return new UserDto(updatedUser)
 
     }
+    
+
 }

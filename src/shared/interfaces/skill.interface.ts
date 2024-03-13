@@ -7,6 +7,7 @@ export interface ISkill{
     description: string,
     categoryId: string | mongoose.Types.ObjectId,
     departments: string[] | mongoose.Types.ObjectId[]
+    organizationId: string | mongoose.Types.ObjectId
 }
 
 export interface ICategory{

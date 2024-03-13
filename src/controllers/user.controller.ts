@@ -17,6 +17,15 @@ export class UserController{
    
     constructor(){}
 
+
+    static async me(req: Request, res: Response, next:NextFunction){
+        try {
+            const user = await UserService.me(req.user._id)
+            res.json({user})
+        } catch (error) {
+            next(error)
+        }
+    }
     static async logout(req: Request, res: Response, next:NextFunction){
         try{
             const {refreshToken} = req.cookies

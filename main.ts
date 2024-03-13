@@ -11,6 +11,8 @@ import authRoute from './src/routes/auth.route'
 import Routes from "./src/routes"
 import cors from 'cors'
 import { deserialize } from './src/middlewares/deserialization';
+import { AdminService } from './src/services/admin.service';
+import { ITeamRole } from './src/shared/interfaces/teamrole.interface';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

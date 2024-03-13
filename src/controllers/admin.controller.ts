@@ -13,6 +13,7 @@ import { InvitationService } from '../services/invitation.service';
 import { UserDto } from '../shared/dtos/user.dto';
 import { AdminService } from '../services/admin.service';
 import { resolveRole } from '../shared/utils';
+import { ITeamRole } from '../shared/interfaces/teamrole.interface';
 export class AdminController{
 
     static async setRole(req: Request, res: Response, next:NextFunction)
@@ -99,4 +100,50 @@ export class AdminController{
        
        
     }
+    static async createTeamRole(req: Request, res: Response, next:NextFunction){
+        try{
+        const teamRole: ITeamRole = {
+            name: req.body.name,
+            organizationId: req.user.organization
+        }
+        const role = await AdminService.createTeamRole(teamRole)
+        res.json({success:true, teamRole: role})
+    }
+    catch(error){
+        next(error)
+    }
+    }
+    static async updateTeamRole(req: Request, res: Response, next:NextFunction){
+        try{
+        const oldName = req.body.oldName
+        const newName = req.body.newName
+        const role = await AdminService.updateTeamRoleName(oldName,newName)
+        res.json({success:true, teamRole: role})
+    }
+    catch(error){
+        next(error)
+    }
+}
+    static async getTeamRoles(req: Request, res: Response, next:NextFunction){
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const pageSize = parseInt(req.query.pageSize as string) || 10;
+            const organizationId = req.user.organization
+            const teamRoles = await AdminService.getTeamRoles(organizationId, page, pageSize)
+            res.json({success:true, ...teamRoles})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async deleteTeamRole(req: Request, res: Response, next:NextFunction){
+        try {
+            const organizationId = req.user.organization
+            const name = req.body.name
+            const deleted = await AdminService.deleteTeamRole(organizationId, name)
+            res.json({success:true, deletedRole: deleted})
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }

@@ -15,12 +15,7 @@ export enum Experience {
     FOUR_TO_SEVEN_YEARS = "4-7 years",
     MORE_THAN_SEVEN_YEARS = ">7 years",
   }
-//   export enum RoleType {
-//     ADMIN = "ADMIN",
-//     DEPARTMENT_MANAGER = "DEPARTMENT_MANAGER",
-//     PROJECT_MANAGER = "PROJECT_MANAGER",
-//     EMPLOYEE = "EMPLOYEE"
-// }
+
 export enum RoleType {
   ADMIN = 1,
   DEPARTMENT_MANAGER = 2,

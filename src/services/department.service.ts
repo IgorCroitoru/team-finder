@@ -12,6 +12,10 @@ export class DepartmentService{
     static async create(_department: IDepartment){
         const managerId = _department.manager;
         let user;
+        const findDep = await DepartmentModel.findOne({name: _department.name, organization:_department.organization})
+        if(findDep){
+            throw new Errors.CustomError('Department with this name already exists',0,400)
+        }
         if(managerId){
             user = await UserModel.findById(managerId).exec()
             if (!user) {
@@ -25,6 +29,7 @@ export class DepartmentService{
                 throw new Errors.CustomError(`User is already a manager in ${depart.name}` ,0,400)
             }
         }
+        
         const department = await DepartmentModel.create(_department)
         if(!department){
             throw new Errors.CustomError('Error creating department', 0, 500)

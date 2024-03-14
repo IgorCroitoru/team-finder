@@ -8,8 +8,10 @@ export class DepartmentController{
         try{
             const department: IDepartment = {
                 name: req.body.department.name,
-                manager: req.body.department.manager ?? undefined,
                 organization: req.user.organization
+            }
+            if(req.body.department.manager){
+                department.manager = req.body.department.manager
             }
 
             const newDepartment = await DepartmentService.create(department);

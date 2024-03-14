@@ -5,7 +5,7 @@ interface IDepartmentDoc extends IDepartment, Document {}
 const departmentSchema = new Schema<IDepartmentDoc>({
     name: {type: String, required: true, unique: true},
     skills: [{type: Schema.Types.ObjectId, ref: 'Skill', required: true, default: [] }],
-    manager: {type: Schema.Types.ObjectId, ref: 'User', required: false, unique: true},
+    manager: {type: Schema.Types.ObjectId, ref: 'User', required: false},
     organization: {type: Schema.Types.ObjectId, ref: 'User', required: true},
 })
 

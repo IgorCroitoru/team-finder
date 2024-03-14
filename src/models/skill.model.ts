@@ -3,7 +3,7 @@ import { Experience, SkillLevel } from '../shared/enums';
 import { IUserSkill,ISkill, ICategory } from '../shared/interfaces/skill.interface';
 import { Organization } from './org.model';
 
-interface ISkillDoc extends ISkill, Document{}
+export interface ISkillDoc extends ISkill, Document{}
 interface ICategoryDoc extends ICategory, Document{}
 interface IUserSkillDoc extends IUserSkill, Document{}
 const SkillSchema = new Schema<ISkillDoc>({
@@ -20,7 +20,8 @@ const SkillSchema = new Schema<ISkillDoc>({
 });
 
 const CategorySchema = new Schema<ICategoryDoc>({
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    organizationId: {type: Schema.Types.ObjectId, ref: 'Organization', required:true}
   });
 
 const UserSkillSchema = new Schema<IUserSkillDoc>({

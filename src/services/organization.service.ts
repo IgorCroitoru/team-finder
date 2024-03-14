@@ -3,11 +3,39 @@ import { DepartmentModel } from "../models/department.model";
 import { UserModel } from "../models/user.model";
 import { UserDto } from "../shared/dtos/user.dto";
 import { RoleType } from "../shared/enums";
+import { resolveRole } from "../shared/utils";
+
 
 export class OrganizationService{
-    static async getUsers(query: any, pageNumber = 1, pageSizeNumber = 10){
+    static async getUsers(reqQuery: any, pageNumber = 1, pageSizeNumber = 10){
         const offset = (pageNumber - 1) * pageSizeNumber;
+        let hasDepartment:string = reqQuery.hasDepartment;
+        const query:any = {}
+        query.organizationId = reqQuery.organizationId
+
+        if (reqQuery.roles) {
+            const rolesInput = Array.isArray(reqQuery.role) ? reqQuery.role : [reqQuery.role];
+            const roles = rolesInput
+              .map((role: string) => resolveRole(parseInt(role as string)))
+              .filter((role: string) => role !== undefined); // Ensure only valid roles are included
+    
+            if (roles.length > 0) {
+              query.roles = { $in: roles };
+            }
+          }
         
+          if (hasDepartment === 'true') {
+            // If hasDepartment is true, look for users where departmentId exists and is not null
+            query.departmentId = { $ne: null, $exists: true };
+          } else if (hasDepartment === 'false') {
+            // If hasDepartment is false, look for users where departmentId is null or does not exist
+            query.$or = [
+              { departmentId: null }, // Matches documents where departmentId is explicitly set to null
+              { departmentId: { $exists: false } } // Matches documents where departmentId does not exist
+            ];
+          }
+  
+
         const [users, totalCount] =  await Promise.all([
             UserModel.find(query)
                 .select('email name departmentId skills roles availableHours')

@@ -117,7 +117,9 @@ export class AdminController{
         try{
         const oldName = req.body.oldName
         const newName = req.body.newName
-        const role = await AdminService.updateTeamRoleName(oldName,newName)
+        const organizationId = req.user.organization
+        const role = await AdminService.updateTeamRoleName(organizationId,oldName,newName)
+        
         res.json({success:true, teamRole: role})
     }
     catch(error){

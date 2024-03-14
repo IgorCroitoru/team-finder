@@ -63,12 +63,19 @@ export class AdminService {
         const tr = await TeamRole.create(teamRole)
         return tr
     }
-    static async updateTeamRoleName(oldName: string,newName:string){
+    static async updateTeamRoleName(organizationId: string | mongoose.Schema.Types.ObjectId, oldName: string, newName:string){
+        const existRole = await TeamRole.findOne({name: newName})
+        if(existRole){
+            throw new Errors.CustomError(`${newName} skill already exists`,0,400);
+        }
         const newRole = await TeamRole.findOneAndUpdate(
-            {name: oldName},
+            {organizationId,name: oldName},
             {$set: {name:newName}},
             {new:true}
             )
+        if(!newRole){
+            throw new Errors.CustomError(`${oldName} skill with that name does not exists`,0 , 404)
+        }
         return newRole
     }
     static async getTeamRoles(organizationId: string | mongoose.Schema.Types.ObjectId,page = 1, pageSize = 10){

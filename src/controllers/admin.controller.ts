@@ -130,8 +130,9 @@ export class AdminController{
         try {
             const page = parseInt(req.query.page as string) || 1;
             const pageSize = parseInt(req.query.pageSize as string) || 10;
+            const all = req.query.all === 'true';
             const organizationId = req.user.organization
-            const teamRoles = await AdminService.getTeamRoles(organizationId, page, pageSize)
+            const teamRoles = await AdminService.getTeamRoles(organizationId, page, pageSize,all)
             res.json({success:true, ...teamRoles})
         } catch (error) {
             next(error)

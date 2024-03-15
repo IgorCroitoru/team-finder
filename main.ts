@@ -14,6 +14,7 @@ import { deserialize } from './src/middlewares/deserialization';
 import { AdminService } from './src/services/admin.service';
 import { ITeamRole } from './src/shared/interfaces/teamrole.interface';
 import { UserModel } from './src/models/user.model';
+import { Skill } from './src/models/skill.model';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

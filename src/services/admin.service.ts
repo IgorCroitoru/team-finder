@@ -78,22 +78,35 @@ export class AdminService {
         }
         return newRole
     }
-    static async getTeamRoles(organizationId: string | mongoose.Schema.Types.ObjectId,page = 1, pageSize = 10){
-        const offset = (page - 1) * pageSize;
-        const [teamRoles, totalCount] = await Promise.all([
-            TeamRole.find({organizationId})
-                    .select('-__v -organizationId')
-                    .skip(offset)
-                    .limit(pageSize).exec(),
-            TeamRole.countDocuments({organizationId})
-            ])
-        const pagination = {
-            totalRecords: totalCount,
-            currentPage: page,
-            totalPages: Math.ceil(totalCount/pageSize)
+    static async getTeamRoles(organizationId: string | mongoose.Schema.Types.ObjectId, page = 1, pageSize = 10, all: boolean = false){
+        let query = TeamRole.find({organizationId}).select('-__v -organizationId');
+        
+        let totalCount;
+        if (!all) {
+            const offset = (page - 1) * pageSize;
+            query = query.skip(offset).limit(pageSize);
+            totalCount = await TeamRole.countDocuments({organizationId});
+        } else {
+            // If 'all' is true, we still want to know the total count but won't use it for pagination
+            totalCount = await TeamRole.countDocuments({organizationId});
         }
-        return {teamRoles, pagination}
+    
+        const teamRoles = await query.exec();
+    
+        if (all) {
+            // If 'all' is true, return all roles without pagination info
+            return {teamRoles, totalRecords: totalCount};
+        } else {
+            // Otherwise, return paginated response
+            const pagination = {
+                totalRecords: totalCount,
+                currentPage: page,
+                totalPages: Math.ceil(totalCount / pageSize),
+            };
+            return {teamRoles, pagination};
+        }
     }
+    
     static async deleteTeamRole(organizationId: string | mongoose.Schema.Types.ObjectId, name: string){
         const deleted = await TeamRole.findOneAndDelete({organizationId,name}).exec()
         if(!deleted){

@@ -10,9 +10,18 @@ export class SkillController{
         try{
             const organizationId = req.user.organization
             const departmentId = req.user.department
+            const reqQuery = req.query
+            if(reqQuery.myDepartment === 'true'){
+                reqQuery.departmentId = departmentId
+            }
+            if(reqQuery.myCreations === 'true'){
+                reqQuery.managerId = req.user._id
+            }
             
+            const skills = await SkillService.getSkills(organizationId, reqQuery)
+            res.json({success:true, ...skills})
         }catch(error){
-
+            next(error)
         }
     }
     static async findCategory(req: Request, res: Response, next:NextFunction){
@@ -38,6 +47,30 @@ export class SkillController{
         }
         const createdCategory = await SkillService.createCategory(category);
         res.json({success:true, category:createdCategory})
+        }catch(error){
+            next(error)
+        }
+    }
+    static async deleteCategory(req: Request, res: Response, next:NextFunction){
+        try {
+            const name = req.body.name
+            const categoryId = req.body._id
+            const organizationId = req.user.organization
+
+            const deleted = await SkillService.deleteCategory(organizationId, categoryId,  name)
+            res.json({success:true, deletedCategory: deleted})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async updateCategory(req: Request, res: Response, next:NextFunction){
+        try{
+            const name = req.body.name
+            const newName = req.body.newName
+            const categoryId = req.body._id
+            const organizationId = req.user.organization
+            const updated = await SkillService.updateCategory(organizationId,newName,categoryId,name)
+            res.json({success:true, updatedCategory: updated})
         }catch(error){
             next(error)
         }
@@ -80,8 +113,10 @@ export class SkillController{
                 description:skill.description,
                 authorId: req.user._id,
                 organizationId: req.user.organization,
-                departments: [req.user.department],
                 categoryId: skill.category._id
+            }
+            if(skill.setMyDepartment === true){
+                skillObj.departments = [req.user.department]
             }
             const createdSkill = await SkillService.createSkill(req.user.organization, skillObj)
             res.json({success: true, skill:createdSkill, newCategory})

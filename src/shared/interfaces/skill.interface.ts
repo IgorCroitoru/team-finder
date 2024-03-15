@@ -6,7 +6,7 @@ export interface ISkill{
     authorId: string | mongoose.Types.ObjectId
     description: string,
     categoryId: string | mongoose.Schema.Types.ObjectId ,
-    departments: string[] | mongoose.Types.ObjectId[]
+    departments?: string[] | mongoose.Types.ObjectId[]
     organizationId: string | mongoose.Types.ObjectId
 }
 

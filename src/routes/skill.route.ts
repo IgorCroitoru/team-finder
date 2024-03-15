@@ -6,4 +6,7 @@ const router = Router()
 router.post('/create-category', authMiddleware,SkillController.createCategory)
 router.get('/find-category', authMiddleware, SkillController.findCategory)
 router.post('/create-skill', authMiddleware, SkillController.createSkill)
+router.get('/get-skills',authMiddleware,SkillController.getSkills)
+router.delete('/delete-category', authMiddleware, SkillController.deleteCategory)
+router.put('/update-category', authMiddleware, SkillController.updateCategory)
 export default router

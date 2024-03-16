@@ -90,7 +90,7 @@ export class UserService {
         }
         return userSkill
     }
-    static async mySkills(userId: string | mongoose.ObjectId){
+    static async userSkills(userId: string | mongoose.ObjectId){
         const skills = await UserSkill.find({
             userId,
             confirmedById: {$ne: null}

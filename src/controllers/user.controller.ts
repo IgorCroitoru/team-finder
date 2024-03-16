@@ -118,9 +118,9 @@ export class UserController{
           next(error);
         }
       }
-    static async mySkills(req: Request, res: Response, next: NextFunction){
+    static async userSkills(req: Request, res: Response, next: NextFunction){
         try {
-            const skills = await UserService.mySkills(req.user._id)
+            const skills = await UserService.userSkills(req.user._id)
             res.json({success:true, skills})
         } catch (error) {
             next(error)

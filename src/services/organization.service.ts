@@ -90,6 +90,10 @@ export class OrganizationService{
         const offset = (page - 1) * pageSize;
         const [departments, totalCount] = await Promise.all([
             DepartmentModel.find({organization: organizationId})
+            .populate({
+              path: 'manager',
+              select: '_id name'
+            })
             .select('name manager organization')
             .skip(offset)
             .limit(pageSize),

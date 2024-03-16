@@ -81,4 +81,30 @@ export class DepartmentController{
             next(error)
         }
     }
+    static async assignSkill(req: Request, res: Response, next:NextFunction){
+        try {
+            const departmentId = req.user.department
+            if(!departmentId){
+                return next(new Errors.CustomError('User does not have a department',0,404))
+            }
+            const skillId = req.body.skillId
+            const updatedSet = await DepartmentService.assignSkill(departmentId, skillId)
+            res.json({success:true, ...updatedSet})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async deleteSkill(req: Request, res: Response, next:NextFunction){
+        try {
+            const departmentId = req.user.department
+            if(!departmentId){
+                return next(new Errors.CustomError('User does not have a department',0,404))
+            }
+            const skillId = req.body.skillId
+            const updatedSet = await DepartmentService.deleteSkill(departmentId, skillId)
+            res.json({success:true, ...updatedSet})
+        } catch (error) {
+            next(error)
+        }
+    }
 }

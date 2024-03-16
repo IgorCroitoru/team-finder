@@ -18,10 +18,11 @@ export interface ICategory{
 
 export interface IUserSkill{
     _id? : any,
+    userId: string | mongoose.Types.ObjectId,
     skillId: string | mongoose.Types.ObjectId,
     initiatedBy: string | mongoose.Types.ObjectId,
     experience: Experience,
     level: SkillLevel,
-    confirmedById: string | mongoose.Types.ObjectId
+    confirmedById?: string | mongoose.Types.ObjectId | null
 }
 

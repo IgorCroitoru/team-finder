@@ -10,7 +10,6 @@ export interface IUser {
     password: string
     name: string
     availableHours?: number
-    skills?: IUserSkill[]
     departmentId?: string| mongoose.Schema.Types.ObjectId
     roles?: RoleType[]
     organizationId?: string | mongoose.Schema.Types.ObjectId

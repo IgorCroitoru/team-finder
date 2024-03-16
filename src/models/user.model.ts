@@ -17,7 +17,6 @@ const UserSchema = new Schema<IUserDoc>({
       required: true,
       default: RoleType.EMPLOYEE 
     }],
-    skills: [{ type: Schema.Types.ObjectId, ref: 'UserSkill', default: [] }],
     availableHours: { 
         type: Number, 
         required: true, 
@@ -35,5 +34,5 @@ const UserSchema = new Schema<IUserDoc>({
 //     }
 //     next();
 //   });
-  
+
 export const UserModel = mongoose.model<IUserDoc>('User', UserSchema);

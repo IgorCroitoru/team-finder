@@ -10,4 +10,6 @@ router.delete('/delete-department/:departmentId', authMiddleware, DepartmentCont
 router.get('/:departmentId/get-employees', authMiddleware, DepartmentController.getEmployees)
 router.post('/:departmentId/add-user',authMiddleware,DepartmentController.addUser)
 router.put('/:departmentId/delete-user',authMiddleware,DepartmentController.deleteUser)
+router.put('/add-skill', authMiddleware, DepartmentController.assignSkill)
+router.put('/delete-skill', authMiddleware, DepartmentController.deleteSkill)
 export default router

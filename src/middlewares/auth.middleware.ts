@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { Errors } from "../exceptions/api.error";
+import { UserModel } from "../models/user.model";
 import { TokenService } from "../services/token.service";
+import { UserDto } from "../shared/dtos/user.dto";
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction){
+export async function authMiddleware(req: Request, res: Response, next: NextFunction){
     try{
         const authHeader = req.headers.authorization;
         if(!authHeader){
@@ -17,7 +19,12 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction){
         if(!userData){
             return next(Errors.ForbiddenError)
         }
-        req.user = userData
+        const user = await UserModel.findById(userData._id)
+        if(!user){
+            return next(Errors.ForbiddenError)
+        }
+        req.user = new UserDto(user)
+        
         next()
 
     }

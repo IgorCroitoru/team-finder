@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { OrganizationService } from "../services/organization.service";
-import { resolveRole } from "../shared/utils";
 
 export class OrganizationController {
     static async getUsers(req: Request, res: Response, next:NextFunction){

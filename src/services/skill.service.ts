@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
+import { DepartmentController } from "../controllers/department.controller";
 import { Errors } from "../exceptions/api.error";
+import { DepartmentModel } from "../models/department.model";
 import { Category, ISkillDoc, Skill } from "../models/skill.model";
 import { ICategory, ISkill } from "../shared/interfaces/skill.interface";
 const ObjectId = mongoose.Types.ObjectId
@@ -168,6 +170,15 @@ export class SkillService{
         if(!deleted){
             throw new Errors.CustomError('No skill with specific parameters exist',0,400)
         }
+        if (deleted.departments && deleted.departments.length > 0) {
+          // Iterate over the array of department IDs and remove the skill from each
+          await Promise.all(deleted.departments.map(departmentId =>
+              DepartmentModel.updateOne(
+                  { _id: departmentId },
+                  { $pull: { skills: deleted._id } }
+              )
+          ));
+      }
         return deleted
     }
     static async updateCategory(

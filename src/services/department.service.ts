@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { CustomError, Errors } from "../exceptions/api.error";
 import { DepartmentModel } from "../models/department.model";
+import { Skill } from "../models/skill.model";
 import { UserModel } from "../models/user.model";
 import { DepartmentDto } from "../shared/dtos/department.dto";
 import { UserDto } from "../shared/dtos/user.dto";
@@ -100,12 +101,16 @@ export class DepartmentService{
     static async deleteDepartment(departmentId: string | mongoose.Schema.Types.ObjectId, organizationId: string | mongoose.Schema.Types.ObjectId){
         const deletedDepartment = await DepartmentModel.findByIdAndDelete(departmentId)
         if(!deletedDepartment){
-            throw new Errors.CustomError('Department not found', 0 , 400)
+            throw new Errors.CustomError('Department not found', 0 , 404)
         }
         await UserModel.updateMany(
             {organizationId: organizationId,
              departmentId: departmentId },
              { $set: { departmentId: null } }
+        );
+        await Skill.updateMany(
+            { organizationId: organizationId },
+            { $pull: { departments: departmentId } }
         );
         return deletedDepartment._id
     }
@@ -174,6 +179,41 @@ export class DepartmentService{
           return new UserDto(updatedUser)
 
     }
-    
+    static async assignSkill(departmentId: string | mongoose.Schema.Types.ObjectId, skillId: string | mongoose.Schema.Types.ObjectId){
+        const [department, skill] = await Promise.all([
+            DepartmentModel.findById(departmentId),
+            Skill.findById(skillId)
+        ])
+        if(!department) throw new Errors.CustomError('Department does not exists',0,404)
+        if(!skill) throw new Errors.CustomError('Skill does not exists',0,404)
+        const [updatedDep, updatedSkill] = await Promise.all([
+            DepartmentModel.updateOne(
+                {_id: departmentId},
+                {$addToSet: {skills: skill._id}}),
+            Skill.updateOne(
+                {_id:skillId},
+                {$addToSet: {departments: department._id}}
+            )
+        ])
+        return {updatedDepartment: updatedDep, updatedSkill}
+    }
+    static async deleteSkill(departmentId: string | mongoose.Schema.Types.ObjectId, skillId: string | mongoose.Schema.Types.ObjectId){
+        const [department, skill] = await Promise.all([
+            DepartmentModel.findById(departmentId),
+            Skill.findById(skillId)
+        ])
+        if(!department) throw new Errors.CustomError('Department does not exists',0,404)
+        if(!skill) throw new Errors.CustomError('Skill does not exists',0,404)
+        const [updatedDep, updatedSkill] = await Promise.all([
+            DepartmentModel.updateOne(
+                {_id: departmentId},
+                {$pull: {skills: skill._id}}),
+            Skill.updateOne(
+                {_id:skillId},
+                {$pull: {departments: department._id}}
+            )
+        ])
+        return {updatedDepartment: updatedDep, updatedSkill}
+    }
 
 }

@@ -27,17 +27,18 @@ const CategorySchema = new Schema<ICategoryDoc>({
 const UserSkillSchema = new Schema<IUserSkillDoc>({
   skillId: { type: Schema.Types.ObjectId, ref: 'Skill', required: true },
   initiatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index:true },
   experience: { 
     type: String, 
     enum: Object.values(Experience), 
     required: true 
   },
   level: { 
-    type: Number, 
-    enum: Object.values(SkillLevel).filter(value => typeof value === 'number'), // Filters numeric values of the enum
+    type: String, 
+    enum: Object.values(SkillLevel), // Filters numeric values of the enum
     required: true 
   },
-  confirmedById: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  confirmedById: { type: Schema.Types.ObjectId, ref: 'User', default:null, index:true }
   });
   
 export const UserSkill = mongoose.model<IUserSkillDoc>('UserSkill', UserSkillSchema);  

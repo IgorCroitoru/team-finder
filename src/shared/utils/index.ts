@@ -1,6 +1,6 @@
 import { INVITATION_LINK_EXPIRATION } from "../../../constants";
 import jwt from 'jsonwebtoken'
-import { RoleType } from "../enums";
+import { Experience, RoleType, SkillLevel } from "../enums";
 
 /** 
  * @param expiresIn
@@ -14,7 +14,6 @@ export function generateInvitationToken(inviterId: any, organizationId: any, exp
   const expirationDate =  expiresIn?new Date(now.getTime()+(expiresIn*1000)):new Date(now.getTime()+(INVITATION_LINK_EXPIRATION*1000))
   return {token, expiration: expirationDate };
 }
-
 export function resolveRole(role: number | string): RoleType | undefined {
   if (typeof role === 'number') {
     return Object.values(RoleType).includes(role) ? role : undefined
@@ -24,5 +23,17 @@ export function resolveRole(role: number | string): RoleType | undefined {
     );
     return matchingRole ? RoleType[matchingRole[0] as keyof typeof RoleType] : undefined;
   }
+  return;
+}
+export function parseExperience(input: string | number): Experience | undefined{
+  let result = Object.values(Experience).find(value => value === input);
+  if (result) return result as Experience;
+  return;
+}
+
+// Parses and returns a valid SkillLevel enum value or throws an error if invalid
+export function parseSkillLevel(input: string): SkillLevel | undefined{
+  let result = Object.values(SkillLevel).find(value => value === input);
+  if (result) return result as SkillLevel;
   return;
 }

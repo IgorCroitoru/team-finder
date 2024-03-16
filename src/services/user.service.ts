@@ -12,6 +12,8 @@ import { TokenService } from './token.service';
 import { UserModel } from '../models/user.model';
 import {IUser} from "../shared/interfaces/user.interface"
 import { RoleType } from '../shared/enums';
+import { IUserSkill } from '../shared/interfaces/skill.interface';
+import { UserSkill } from '../models/skill.model';
 dotenv.config()
 
 export class UserService {
@@ -74,6 +76,35 @@ export class UserService {
         await TokenService.saveToken(user._id, tokens.refreshToken)
         return {...tokens, user: userDto}
     }
+    static async assignSkill(skill:IUserSkill ){
+        const hasSkill = await UserSkill.findOne({skillId: skill.skillId})
+        if(hasSkill){
+            throw new Errors.CustomError('User already has that skill', 0 ,400)
+        }
 
+
+        const userSkill = await UserSkill.create(skill)
+
+        if(!userSkill){
+            throw new Errors.CustomError('Error while creating skill',0,500)
+        }
+        return userSkill
+    }
+    static async mySkills(userId: string | mongoose.ObjectId){
+        const skills = await UserSkill.find({
+            userId,
+            confirmedById: {$ne: null}
+        })
+        .populate({
+            path:'skillId',
+            select: '-organizationId -authorId -categoryId -departments -__v'
+        })
+        .select('-initiatedBy -userId -confirmedById -__v')
+        return skills
+    }
+    static async removeSkill(skillId: string | mongoose.ObjectId, userId: string |mongoose.ObjectId ){
+        const removed = await UserSkill.findOneAndDelete({_id: skillId, userId}).select('_id')
+        return removed
+    }
     
 }

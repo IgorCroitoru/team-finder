@@ -4,7 +4,7 @@ import express, { response } from 'express'
 import cookieParser from 'cookie-parser'
 import Fingerprint from "express-fingerprint";
 import { IUser } from './src/shared/interfaces/user.interface';
-import { RoleType } from './src/shared/enums';
+import { Experience, RoleType, SkillLevel } from './src/shared/enums';
 import { UserDto } from './src/shared/dtos/user.dto';
 import errorMiddleware from './src/middlewares/errorMiddleWare'
 import authRoute from './src/routes/auth.route'
@@ -14,7 +14,10 @@ import { deserialize } from './src/middlewares/deserialization';
 import { AdminService } from './src/services/admin.service';
 import { ITeamRole } from './src/shared/interfaces/teamrole.interface';
 import { UserModel } from './src/models/user.model';
-import { Skill } from './src/models/skill.model';
+import { Skill, UserSkill } from './src/models/skill.model';
+import { parseExperience} from './src/shared/utils';
+import { resolve } from 'path';
+import { IUserSkill } from './src/shared/interfaces/skill.interface';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,4 +59,5 @@ app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);
   
 });
+
 

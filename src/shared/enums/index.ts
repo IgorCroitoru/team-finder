@@ -1,9 +1,9 @@
 export enum SkillLevel {
-    Learns = 1,
-    Knows = 2,
-    Does = 3,
-    Helps = 4,
-    Teaches = 5,
+    Learns = "Learns",
+    Knows = "Knows",
+    Does = "Does",
+    Helps = "Helps",
+    Teaches = "Teaches",
   }
   
   // Define the enum for experience ranges

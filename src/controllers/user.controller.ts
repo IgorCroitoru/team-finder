@@ -3,7 +3,7 @@ import { COOKIE_SETTINGS } from '../../constants';
 import { TokenService } from '../services/token.service';
 import { IUser } from '../shared/interfaces/user.interface';
 import {AuthService} from '../services/auth.service';
-import { RoleType } from '../shared/enums';
+import { RoleType, SkillLevel } from '../shared/enums';
 import mongoose from 'mongoose';
 import { UserModel } from '../models/user.model';
 import { IOrganization } from '../shared/interfaces/organization.interface';
@@ -12,6 +12,9 @@ import { Errors } from '../exceptions/api.error';
 import { InvitationService } from '../services/invitation.service';
 import { UserDto } from '../shared/dtos/user.dto';
 import { UserService } from '../services/user.service';
+import { IUserSkill } from '../shared/interfaces/skill.interface';
+import { parseExperience, parseSkillLevel } from '../shared/utils';
+import { UserSkill } from '../models/skill.model';
 
 export class UserController{
    
@@ -87,5 +90,55 @@ export class UserController{
             next(e)
         }
     }
+    static async assignSkill(req: Request, res: Response, next: NextFunction) {
+        try{
+            
+          const skillData = req.body.skill;
+            skillData.experience = parseExperience(skillData.experience);
+            skillData.level = parseSkillLevel(skillData.level);
+            if(!skillData.experience){
+                return next(new Errors.CustomError('Bad experience value',0,400))
+            }
+            if(!skillData.level){
+                return next(new Errors.CustomError('Bad level value',0,400))
+            }
+      
+          const userSkill: IUserSkill = {
+            skillId: skillData._id,
+            userId: req.user._id,
+            initiatedBy: req.user._id,
+            experience: skillData.experience,
+            level: skillData.level,
+           
+          };
+      
+          const savedSkill = await UserService.assignSkill(userSkill)
+          res.json({success:true, skill: savedSkill})
+        } catch (error) {
+          next(error);
+        }
+      }
+    static async mySkills(req: Request, res: Response, next: NextFunction){
+        try {
+            const skills = await UserService.mySkills(req.user._id)
+            res.json({success:true, skills})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async removeSkill(req: Request, res: Response, next: NextFunction){
+        try {
+            const removed = await UserService.removeSkill(req.params.skillId, req.user._id)
+            if(!removed) {
+                return next(new Errors.CustomError('No skill was removed', 0, 404))
+            }
+            res.json({success:true, removedSkill: removed})
+        } catch (error) {
+            next(error)
+        }
+    }
+      
     
 }
+
+

@@ -29,11 +29,18 @@ jobs:
         push: true
         tags: igorcroitoru/teamfinder:${{ github.sha }}
         file: ./Dockerfile
-       
+        build-args: |
+          PORT=${{ secrets.PORT }}
+          REMOTE_MONGO=${{ secrets.REMOTE_MONGO }}
+          ROUNDS=${{ secrets.ROUNDS }}
+          JWT_ACCESS_SECRET=${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET=${{ secrets. JWT_REFRESH_SECRET }}
+          JWT_SIGNUP_SECRET=${{ secrets.JWT_SIGNUP_SECRET }}
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: TeamFinderApp
         slot-name: production
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_9864c874077a4c758995a514548d1a3b }}
-            images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_4f5c5c44f0cd4dcf98bfed33c02fad7f }}/igorcroitoru/teamfinder:${{ github.sha }}'
+         publish-profile: ${{ secrets.AzureAppService_PublishProfile_9864c874077a4c758995a514548d1a3b }}
+        images: igorcroitoru/teamfinder:${{ github.sha }}

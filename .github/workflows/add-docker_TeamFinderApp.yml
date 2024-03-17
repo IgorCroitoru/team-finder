@@ -42,5 +42,5 @@ jobs:
       with:
         app-name: TeamFinderApp
         slot-name: production
-         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9864C874077A4C758995A514548D1A3B }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9864C874077A4C758995A514548D1A3B }}
         images: igorcroitoru/teamfinder:${{ github.sha }}

@@ -31,7 +31,8 @@ export interface IProjectMember {
     teamRoles: string[]| mongoose.ObjectId[];
     comments?: string;
     projectId: string| mongoose.ObjectId;
-    workingHours: number
+    workingHours: number,
+    status: 'Awaiting'| 'Deleted' | 'Active' | 'Ended'
 
 }
 

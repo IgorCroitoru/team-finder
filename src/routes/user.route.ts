@@ -14,10 +14,10 @@ router.get('/me',authMiddleware, UserController.me)
 router.post('/assign-skill', authMiddleware, UserController.assignSkill)
 router.get('/my-skills', authMiddleware, UserController.userSkills)
 router.delete('/remove-skill/:skillId', authMiddleware, UserController.removeSkill)
-router.get('/my-projects', authMiddleware)
+router.get('/my-projects', authMiddleware, UserController.myProjects)
 //------------------------------------------------------------------------------------//
 
 //routes for managers/admins...
 router.get('/:userId/skills', authMiddleware, UserController.userSkills) // route for getting a specific user skills. Accessible for dep. manager so far
-router.get('/my-projects', authMiddleware,ProjectController.getCreatedProjects)
+router.get('/created-projects', authMiddleware,ProjectController.getCreatedProjects)
 export default router;

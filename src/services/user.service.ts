@@ -14,6 +14,7 @@ import {IUser} from "../shared/interfaces/user.interface"
 import { RoleType } from '../shared/enums';
 import { IUserSkill } from '../shared/interfaces/skill.interface';
 import { UserSkill } from '../models/skill.model';
+import { ProjectMemberModel } from '../models/project.model';
 dotenv.config()
 
 export class UserService {
@@ -76,6 +77,8 @@ export class UserService {
         await TokenService.saveToken(user._id, tokens.refreshToken)
         return {...tokens, user: userDto}
     }
+
+    //notification
     static async assignSkill(skill:IUserSkill ){
         const hasSkill = await UserSkill.findOne({skillId: skill.skillId})
         if(hasSkill){
@@ -106,5 +109,15 @@ export class UserService {
         const removed = await UserSkill.findOneAndDelete({_id: skillId, userId}).select('_id')
         return removed
     }
-    
+    static async myProjects(userId:string | mongoose.ObjectId){
+        const projects = await ProjectMemberModel.find({
+            userId,
+            status: { $in: ['Active'] }
+        })
+        .populate({
+            path: 'projectId',
+            select: 'projectPeriod projectStatus projectName' // Only include these fields from the Project
+        })
+        return projects
+    }
 }

@@ -94,6 +94,7 @@ export class ProjectService {
         }
     
     }
+    //only project manager
     static async deleteProject(projectId: string | mongoose.ObjectId){
         const project = await ProjectModel.findOneAndDelete(
             {_id: projectId}

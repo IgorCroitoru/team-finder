@@ -15,6 +15,8 @@ import { UserService } from '../services/user.service';
 import { IUserSkill } from '../shared/interfaces/skill.interface';
 import { parseExperience, parseSkillLevel } from '../shared/utils';
 import { UserSkill } from '../models/skill.model';
+import { ProjectService } from '../services/project.service';
+import { ok } from 'assert';
 
 export class UserController{
    
@@ -135,6 +137,14 @@ export class UserController{
                 return next(new Errors.CustomError('No skill was removed', 0, 404))
             }
             res.json({success:true, removedSkill: removed})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async myProjects(req: Request, res: Response, next: NextFunction){
+        try {
+            const projects = await UserService.myProjects(req.user._id)
+            res.json({success:ok, projects})
         } catch (error) {
             next(error)
         }

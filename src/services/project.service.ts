@@ -81,6 +81,9 @@ export class ProjectService {
             .map(id => id.toString())
             .includes(propose.userId.toString())
         );
+        if(employee.organizationId!==project.organizationId){
+            throw new Errors.CustomError('Employee and project are in different organizations',0,400)
+        }
         if(isMemberAlready){
             throw new Errors.CustomError('User is already a member of this project',0,400)
         }
@@ -92,5 +95,14 @@ export class ProjectService {
             throw new Errors.CustomError('User already exists in project', 1, 400);
         }
     
+    }
+    static async deleteProject(projectId: string | mongoose.ObjectId){
+        const project = await ProjectModel.findOneAndDelete(
+            {_id: projectId}
+        )
+        if(!project){
+            throw new Errors.CustomError('Error deleting project',0,403)
+        }
+        return project
     }
 }

@@ -19,14 +19,11 @@ export class ProjectController {
             }
             
 
-            // if (projBody.projectPeriod === 'Fixed') {
-            //     if(projBody.deadlineDate){
-            //     project.deadlineDate = new Date(projBody.deadlineDate);
-            //     }
-            //     else{
-            //         return next(new Errors.CustomError('To Fixed projects DeadLine is required',0,400))
-            //     }
-            // }
+            if (projBody.projectPeriod === 'Fixed') {
+                if(projBody.deadlineDate){
+                project.deadlineDate = new Date(projBody.deadlineDate);
+                }
+            }
             const newProject = await ProjectService.create(project)
             res.json({success:true, project: newProject})
         } catch (error) {
@@ -49,6 +46,15 @@ export class ProjectController {
             const {projectId} = req.params
             const project = await ProjectService.getProject(projectId)
             res.json({success:true, project})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async deleteProject(req: Request, res: Response, next:NextFunction){
+        try {
+            const managerId = req.user._id
+            const projectId = req.body.projectId
+            
         } catch (error) {
             next(error)
         }

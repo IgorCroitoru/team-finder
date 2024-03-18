@@ -17,12 +17,14 @@ export class ProjectController {
                 projectPeriod: projBody.projectPeriod || projBody.period,
                 technologyStack: projBody.technologyStack,
             }
-            
+            console.log
             if (project.projectPeriod === 'Fixed') {
                 if(projBody.deadlineDate){
                 project.deadlineDate = new Date(projBody.deadlineDate);
                 }
+                else{
                 return next(new Errors.CustomError('Fixed projects must include deadline date',0,400))
+                }
             }
             const newProject = await ProjectService.create(project)
             res.json({success:true, project: newProject})

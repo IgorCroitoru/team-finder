@@ -15,11 +15,9 @@ export class ProjectService {
             if(!isManager?.roles?.includes(RoleType.PROJECT_MANAGER)){
                 throw new Errors.CustomError('User is not a manager',0,403)
             }
-
+            console.log(_project)
         }
-        if(_project.projectPeriod === 'Fixed' && !_project.deadlineDate){
-            throw new Errors.CustomError('Fixed projects must include deadline date',0,400)
-        }
+        
         if(!['Starting' , 'Not Started'].includes(_project.projectStatus)){
             throw new Errors.CustomError('New project must have Starting or Not Started status',0,400)
         }

@@ -19,14 +19,14 @@ export class ProjectController {
             }
             
 
-            if (projBody.projectPeriod === 'Fixed') {
-                if(projBody.deadlineDate){
-                project.deadlineDate = new Date(projBody.deadlineDate);
-                }
-                else{
-                    return next(new Errors.CustomError('To Fixed projects DeadLine is required',0,400))
-                }
-            }
+            // if (projBody.projectPeriod === 'Fixed') {
+            //     if(projBody.deadlineDate){
+            //     project.deadlineDate = new Date(projBody.deadlineDate);
+            //     }
+            //     else{
+            //         return next(new Errors.CustomError('To Fixed projects DeadLine is required',0,400))
+            //     }
+            // }
             const newProject = await ProjectService.create(project)
             res.json({success:true, project: newProject})
         } catch (error) {

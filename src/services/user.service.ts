@@ -99,8 +99,12 @@ export class UserService {
             confirmedById: {$ne: null}
         })
         .populate({
-            path:'skillId',
-            select: '-organizationId -authorId -categoryId -departments -__v'
+            path: 'skillId',
+            select: '-organizationId -authorId -departments -__v',
+            populate: { // Populate the categoryId within the skillId document
+                path: 'categoryId',
+                select: 'name _id' // Select fields you want from the Category model
+            }
         })
         .select('-initiatedBy -userId -confirmedById -__v')
         return skills

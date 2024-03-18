@@ -25,7 +25,7 @@ const ProjectSchema = new mongoose.Schema<IProjectDoc>({
 })
 
 const ProjectMemberSchema = new mongoose.Schema<IProjectMemberDoc>({
-    status: {type: String, enum: ['Awaiting', 'Deleted', 'Active', 'Ended']},
+    status: {type: String, enum: ['Awaiting', 'Deleted', 'Active', 'Ended'], default: 'Awaiting'},
     userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     confirmedById: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     comments: {type: String},

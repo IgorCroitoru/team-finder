@@ -95,13 +95,18 @@ export class ProjectService {
     
     }
     //only project manager
-    static async deleteProject(projectId: string | mongoose.ObjectId){
-        const project = await ProjectModel.findOneAndDelete(
-            {_id: projectId}
-        )
+    static async deleteProject(projectId: string | mongoose.ObjectId, managerId: string | mongoose.ObjectId){
+        const project = await ProjectModel.findById(projectId)
         if(!project){
-            throw new Errors.CustomError('Error deleting project',0,403)
+            throw new Errors.CustomError('Non existing project',0,404)
         }
+        if(project.managerId.toString() !== managerId.toString()){
+            throw new Errors.CustomError('You are not manager of this project',0,403)
+        }
+        if(['In Progress', 'Closing', 'Closed'].includes(project.projectStatus)){
+            throw new Errors.CustomError(`Project has currently "${project.projectStatus}" status and cannot be deleted`,0 ,304)
+        }
+        await project.deleteOne();
         return project
     }
 }

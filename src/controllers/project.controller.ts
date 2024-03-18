@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Errors } from "../exceptions/api.error";
 import { ProjectService } from "../services/project.service";
-import { IProject } from "../shared/interfaces/project.interface";
+import { IProject, IPropose } from "../shared/interfaces/project.interface";
 
 export class ProjectController {
     static async create(req: Request, res: Response, next:NextFunction){
@@ -17,7 +17,7 @@ export class ProjectController {
                 projectPeriod: projBody.projectPeriod || projBody.period,
                 technologyStack: projBody.technologyStack,
             }
-            console.log
+           
             if (project.projectPeriod === 'Fixed') {
                 if(projBody.deadlineDate){
                 project.deadlineDate = new Date(projBody.deadlineDate);
@@ -28,6 +28,15 @@ export class ProjectController {
             }
             const newProject = await ProjectService.create(project)
             res.json({success:true, project: newProject})
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async proposeEmployee(req: Request, res: Response, next:NextFunction){
+        try {
+            // const propose: IPropose={
+
+            // }
         } catch (error) {
             next(error)
         }
@@ -55,8 +64,9 @@ export class ProjectController {
     static async deleteProject(req: Request, res: Response, next:NextFunction){
         try {
             const managerId = req.user._id
-            const projectId = req.body.projectId
-            
+            const projectId = req.params.projectId
+            const deleted = await ProjectService.deleteProject(projectId, managerId)
+            res.json({success: true, deleted})
         } catch (error) {
             next(error)
         }

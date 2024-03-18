@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000;
 const apiRoutes = express.Router();
 
 const corsOptions = {
-  origin: 'https://atc-2024-codebros-fe-linux-web.azurewebsites.net', // Replace with your frontend's origin
+  origin: 'https://atc-2024-codebros-fe-linux-web-app.azurewebsites.net', // Replace with your frontend's origin
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204

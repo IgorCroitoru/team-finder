@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 
 const apiRoutes = express.Router();
 
-//app.use(cors({credentials:true, origin: "*"}))
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
@@ -39,6 +39,7 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use(cors({credentials:true, origin: "https://atc-2024-codebros-fe-linux-web-app.azurewebsites.net"}))
 app.use(cookieParser());
 app.use(express.json());
 //app.use(deserialize);
@@ -50,6 +51,7 @@ apiRoutes.use('/token',Routes.invRoute )
 apiRoutes.use('/department', Routes.departmentRoutes)
 apiRoutes.use('/organization', Routes.organizationRoutes)
 apiRoutes.use('/skill', Routes.skillRoutes)
+apiRoutes.use('/project', Routes.projectRouter)
 app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 

@@ -16,7 +16,7 @@ export class CustomError extends Error {
     respond(res: any): void {
       res.status(this.statusCode).json(this.getJSON());
     }
-  
+    
     toString(): string {
       return `[Code ${this.code}] - ${this.message}`;
     }

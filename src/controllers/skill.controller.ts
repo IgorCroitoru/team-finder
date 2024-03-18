@@ -124,5 +124,16 @@ export class SkillController{
             next(error)
         }
     }
+    static async deleteSkill(req: Request, res: Response, next:NextFunction){
+        try {
+            const organizationId = req.user.organization
+            const name = req.body.name
+            const skillId = req.body.skillId
+            const deleted = await SkillService.deleteSkill(organizationId, skillId,name)
+            res.json({success:true, deleted})
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }

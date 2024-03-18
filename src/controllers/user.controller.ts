@@ -120,7 +120,9 @@ export class UserController{
       }
     static async userSkills(req: Request, res: Response, next: NextFunction){
         try {
-            const skills = await UserService.userSkills(req.user._id)
+            const userId = req.params.userId ? req.params.userId : req.user._id
+
+            const skills = await UserService.userSkills(userId)
             res.json({success:true, skills})
         } catch (error) {
             next(error)

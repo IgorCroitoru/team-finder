@@ -5,6 +5,7 @@ import invRoute from './invitation.route'
 import departmentRoutes from './department.route'
 import organizationRoutes from './organization.route'
 import skillRoutes from './skill.route'
+import projectRouter from './project.route'
 export default {
     authRoute,
     adminRoute,
@@ -12,5 +13,6 @@ export default {
     invRoute,
     departmentRoutes,
     organizationRoutes,
-    skillRoutes
+    skillRoutes,
+    projectRouter
 }

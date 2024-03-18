@@ -43,7 +43,7 @@ apiRoutes.use('/token',Routes.invRoute )
 apiRoutes.use('/department', Routes.departmentRoutes)
 apiRoutes.use('/organization', Routes.organizationRoutes)
 apiRoutes.use('/skill', Routes.skillRoutes)
-//apiRoutes.use('/project', Routes.projectRouter)
+apiRoutes.use('/project', Routes.projectRouter)
 app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 

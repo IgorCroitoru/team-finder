@@ -30,8 +30,30 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204
 };
+app.use((req, res, next) => {
+  // Get the origin of the request
+  const origin = req.headers.origin;
 
-app.use(cors(corsOptions));
+  if (origin) {
+    // Set the Access-Control-Allow-Origin header to the requesting origin
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    // Allow credentials
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+
+  // Set other CORS headers as needed
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  // If it's a preflight (OPTIONS) request, respond with 204 'No Content'
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
+  next();
+});
+
+//app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 //app.use(deserialize);

@@ -8,7 +8,7 @@ import { ProjectController } from '../controllers/project.controller';
 const router = Router();
 //-----------------------------------------------------------------------------------//
 //for my routes
-router.get('/refresh', authMiddleware,UserController.refresh)
+router.get('/refresh',UserController.refresh)
 router.post('/logout',UserController.logout)
 router.get('/me',authMiddleware, UserController.me)
 router.post('/assign-skill', authMiddleware, UserController.assignSkill)

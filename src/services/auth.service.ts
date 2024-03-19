@@ -19,7 +19,7 @@ export class AuthService{
   
 
   static async login(email: string, password: string){
-    const user:IUser | null = await UserModel.findOne({email}).exec()
+    const user:IUser | null = await UserModel.findOne({email}).select('+password').exec()
     if(!user){
       throw Errors.UserDoesNotExist
     }

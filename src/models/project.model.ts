@@ -30,7 +30,7 @@ const ProjectMemberSchema = new mongoose.Schema<IProjectMemberDoc>({
     confirmedById: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     comments: {type: String},
     projectId: {type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
-    teamRoles: [{type: mongoose.Schema.Types.ObjectId, ref: 'TeamRole'}],
+    teamRole: {type: mongoose.Schema.Types.ObjectId, ref: 'TeamRole'},
     workingHours: {type: Number, 
     required: true, 
     min: [0, 'Available hours must be between 1 and 8.'], // Min value with custom error message

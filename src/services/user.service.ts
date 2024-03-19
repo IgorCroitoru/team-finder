@@ -113,6 +113,8 @@ export class UserService {
         const removed = await UserSkill.findOneAndDelete({_id: skillId, userId}).select('_id')
         return removed
     }
+
+    //projects where am I assigned as employee
     static async myProjects(userId:string | mongoose.ObjectId){
         const projects = await ProjectMemberModel.find({
             userId,

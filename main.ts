@@ -18,6 +18,7 @@ import { Skill, UserSkill } from './src/models/skill.model';
 import { parseExperience} from './src/shared/utils';
 import { resolve } from 'path';
 import { IUserSkill } from './src/shared/interfaces/skill.interface';
+import { DepartmentService } from './src/services/department.service';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -69,11 +70,9 @@ apiRoutes.use('/project', Routes.projectRouter)
 app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.REMOTE_MONGO))
-mongoose.set('debug', true)
-app.listen(PORT, () => {
+mongoose.connect(String(process.env.REMOTE_MONGO)).then(()=>{
+  mongoose.set('debug', true)
+  app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);
-  
-});
-
-
+  });
+})

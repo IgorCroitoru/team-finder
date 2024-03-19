@@ -7,7 +7,7 @@ dotenv.config();
 interface IUserDoc extends IUser,Document {}
 const UserSchema = new Schema<IUserDoc>({
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select:false },
     name: { type: String, required: true },
     departmentId: {type: Schema.Types.ObjectId, ref: 'Department', default:null},
     organizationId: {type: Schema.Types.ObjectId, ref: 'Organization'},

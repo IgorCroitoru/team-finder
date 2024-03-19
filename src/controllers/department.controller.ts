@@ -107,4 +107,13 @@ export class DepartmentController{
             next(error)
         }
     }
+    static async getProjectsFromDepartment(req: Request, res: Response, next:NextFunction){
+        try {
+            const departmentId = req.user.department
+            const projects = await DepartmentService.getProjectsFromDepartment(departmentId)
+            res.json(projects)
+        } catch (error) {
+            next(error)
+        }
+    }
 }

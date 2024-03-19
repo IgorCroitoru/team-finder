@@ -1,11 +1,11 @@
 import { ErrorDescription } from "mongodb";
 import mongoose from "mongoose";
 import { Errors } from "../exceptions/api.error";
-import { ProjectModel } from "../models/project.model";
+import { ProjectMemberModel, ProjectModel } from "../models/project.model";
 import { TeamRole } from "../models/teamrole.model";
 import { UserModel } from "../models/user.model";
 import { RoleType } from "../shared/enums";
-import { IProject, IPropose } from "../shared/interfaces/project.interface";
+import { IProject, IProjectMember, IPropose } from "../shared/interfaces/project.interface";
 
 export class ProjectService {
     static async create(_project:IProject){
@@ -73,26 +73,70 @@ export class ProjectService {
         const project = await ProjectModel.findById(propose.projectId)
         if(!employee) throw new Errors.CustomError('Employee not found',0,404)
         if(!project) throw new Errors.CustomError('Project not found',0,404)
-       
-        const isMemberAlready = ['proposedMembers', 'activeMembers', 'pastMembers'].some(memberType => 
-            project.teamMembers && project.teamMembers[memberType as keyof typeof project.teamMembers]
-            .map(id => id.toString())
-            .includes(propose.userId.toString())
-        );
-        if(employee.organizationId!==project.organizationId){
+        if(!employee.departmentId) throw new Errors.CustomError('User is not in a department',0,400)
+       //check if user is not already proposed on that project
+        const isMemberAlready = await ProjectModel.aggregate([
+            { $match: { _id: project._id } },
+            {
+                $lookup: {
+                    from: 'projectmembers',
+                    localField: 'teamMembers.proposedMembers',
+                    foreignField: '_id',
+                    as: 'proposedMembersInfo'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'projectmembers',
+                    localField: 'teamMembers.activeMembers',
+                    foreignField: '_id',
+                    as: 'activeMembersInfo'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'projectmembers',
+                    localField: 'teamMembers.pastMembers',
+                    foreignField: '_id',
+                    as: 'pastMembersInfo'
+                }
+            },
+            {
+                $project: {
+                    allMembers: { $setUnion: ['$proposedMembersInfo', '$activeMembersInfo', '$pastMembersInfo'] }
+                }
+            },
+            { 
+                $match: { 
+                    'allMembers.userId': { $eq: employee._id } 
+                } 
+            }
+        ])
+        if(employee.organizationId?.toString()!==project.organizationId.toString()){
             throw new Errors.CustomError('Employee and project are in different organizations',0,400)
         }
-        if(isMemberAlready){
+        if(isMemberAlready.length > 0){
             throw new Errors.CustomError('User is already a member of this project',0,400)
         }
         if(employee.availableHours&& employee.availableHours<propose.workingHours){
             throw new Errors.CustomError(`User has only ${employee.availableHours} available hours`,0,400)
         }
         
-        if (isMemberAlready) {
-            throw new Errors.CustomError('User already exists in project', 1, 400);
+       
+        const projectMember: IProjectMember = {
+            status: 'Awaiting',
+            workingHours: propose.workingHours,
+            teamRole: propose.teamRole,
+            comments: propose.comments,
+            userId: propose.userId,
+            projectId:propose.projectId
         }
-    
+        const projectMemDb = await ProjectMemberModel.create(projectMember);
+     
+        await project.updateOne(
+            {$addToSet: {'teamMembers.proposedMembers': projectMemDb._id }}
+       )
+        return project
     }
     //only project manager
     static async deleteProject(projectId: string | mongoose.ObjectId, managerId: string | mongoose.ObjectId){
@@ -106,7 +150,13 @@ export class ProjectService {
         if(['In Progress', 'Closing', 'Closed'].includes(project.projectStatus)){
             throw new Errors.CustomError(`Project has currently "${project.projectStatus}" status and cannot be deleted`,0 ,304)
         }
-        await project.deleteOne();
+        const deleted = await project.deleteOne();
+        if(deleted.deletedCount>0){
+            await ProjectMemberModel.deleteMany({
+                projectId: project._id
+            })
+        }
         return project
     }
+    //static async acceptUserToProject()
 }

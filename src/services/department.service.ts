@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { PipelineStage, ObjectId } from "mongoose";
 import { CustomError, Errors } from "../exceptions/api.error";
 import { DepartmentModel } from "../models/department.model";
+import { ProjectMemberModel } from "../models/project.model";
 import { Skill } from "../models/skill.model";
 import { UserModel } from "../models/user.model";
 import { DepartmentDto } from "../shared/dtos/department.dto";
@@ -214,6 +215,48 @@ export class DepartmentService{
             )
         ])
         return {updatedDepartment: updatedDep, updatedSkill}
+    }
+
+    static async getProjectsFromDepartment(departmentId: string | mongoose.Schema.Types.ObjectId){
+        const pipeline: PipelineStage[] =[
+            {
+                $match: 
+                {status: 'Active'}
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: "userId",
+                    foreignField: "_id",
+                    as: "userData"
+                }
+            },
+            {
+                $unwind: "$userData"
+            },
+            {
+            $match: {
+                "userData.departmentId": new mongoose.Types.ObjectId(departmentId.toString())
+            }
+            },
+            {
+                $lookup: {
+                    from: "projects", 
+                    localField: "projectId",
+                    foreignField: "_id",
+                    as: "projectDetails"
+                }
+            },
+            {
+                $unwind: "$projectDetails"
+            },
+            {
+                $replaceRoot: { newRoot: "$projectDetails" }
+            },
+        
+        ]
+        const projects = await ProjectMemberModel.aggregate(pipeline)
+        return projects
     }
     
 

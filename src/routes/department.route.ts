@@ -12,4 +12,6 @@ router.post('/:departmentId/add-user',authMiddleware,DepartmentController.addUse
 router.put('/:departmentId/delete-user',authMiddleware,DepartmentController.deleteUser)
 router.put('/add-skill', authMiddleware, DepartmentController.assignSkill)
 router.put('/delete-skill', authMiddleware, DepartmentController.deleteSkill)
+//for admin
+router.get('/:departmentId/projects', authMiddleware,DepartmentController.getProjectsFromDepartment)
 export default router

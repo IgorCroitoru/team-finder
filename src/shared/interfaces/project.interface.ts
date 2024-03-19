@@ -27,8 +27,8 @@ export interface IProject {
 export interface IProjectMember {
     _id?:string| mongoose.ObjectId;
     userId: string | mongoose.ObjectId
-    confirmedById: string| mongoose.ObjectId;
-    teamRoles: string[]| mongoose.ObjectId[];
+    confirmedById?: string| mongoose.ObjectId|null;
+    teamRole: string| mongoose.ObjectId;
     comments?: string;
     projectId: string| mongoose.ObjectId;
     workingHours: number,
@@ -41,5 +41,5 @@ export interface IPropose {
   projectId: string| mongoose.ObjectId;
   workingHours: number;
   comments?: string;
-  teamRoles: string[]| mongoose.ObjectId[];
+  teamRole: string| mongoose.ObjectId;
 }

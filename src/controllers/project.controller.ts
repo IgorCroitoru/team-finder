@@ -34,13 +34,23 @@ export class ProjectController {
     }
     static async proposeEmployee(req: Request, res: Response, next:NextFunction){
         try {
-            // const propose: IPropose={
-
-            // }
+            const proposeReq = req.body.propose
+            const projectId = req.params.projectId
+            const propose: IPropose = {
+                userId: proposeReq.userId,
+                workingHours: parseInt(proposeReq.workingHours),
+                comments: proposeReq.comments,
+                teamRole: proposeReq.teamRole,
+                projectId: projectId
+            }
+            const proposeDb = await ProjectService.proposeEmployee(propose)
+            res.json({success:true, proposed: proposeDb})
         } catch (error) {
             next(error)
         }
     }
+
+    //where project manager can see his created projects
     static async getCreatedProjects(req: Request, res: Response, next:NextFunction){
         try {
             const reqQuery = req.query as any;

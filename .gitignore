@@ -1,0 +1,7 @@
+node_modules/
+.env
+dist/
+repository/
+for-front.js
+testing.js
+info.json

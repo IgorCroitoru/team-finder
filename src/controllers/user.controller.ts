@@ -17,6 +17,7 @@ import { parseExperience, parseSkillLevel } from '../shared/utils';
 import { UserSkill } from '../models/skill.model';
 import { ProjectService } from '../services/project.service';
 import { ok } from 'assert';
+import logger from '../../logger';
 
 export class UserController{
    
@@ -33,6 +34,7 @@ export class UserController{
     }
     static async logout(req: Request, res: Response, next:NextFunction){
         try{
+            logger.info(`Cookies logout:` , req.cookies)
             const {refreshToken} = req.cookies
             await TokenService.removeToken(refreshToken)
             res.clearCookie('refreshToken')

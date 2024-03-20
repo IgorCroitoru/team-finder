@@ -49,6 +49,7 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
+  logger.info('Cookies first middleware', req.cookies)
   next();
 });
 

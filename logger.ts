@@ -3,7 +3,7 @@ const { format, transports } = winston;
 
 // Define the log format with colors and timestamps
 const logFormat = format.combine(
-  format.colorize(),
+  //format.colorize(),
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   format.printf(({ timestamp, level, message }) => {
     return `${timestamp} [${level}]: ${message}`;

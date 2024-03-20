@@ -34,11 +34,10 @@ export class UserController{
     }
     static async logout(req: Request, res: Response, next:NextFunction){
         try{
-            logger.info(`Cookies logout:` , req.cookies)
             const {refreshToken} = req.cookies
             await TokenService.removeToken(refreshToken)
             res.clearCookie('refreshToken')
-            return res.json({success: true})
+            return res.json({success: true, cookie: req.cookies})
         }
         catch(e){
             next(e)

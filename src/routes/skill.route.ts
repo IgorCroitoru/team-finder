@@ -4,11 +4,11 @@ import { authMiddleware } from '../middlewares/auth.middleware'
 import authorization from '../middlewares/authorization/role.authorization'
 const router = Router()
 
-router.post('/create-category', authMiddleware, authorization(['DEPARTMENT_MANAGER']), SkillController.createCategory)
+router.post('/create-category', authMiddleware,  SkillController.createCategory)
 router.get('/find-category', authMiddleware, SkillController.findCategory)
-router.post('/create-skill', authMiddleware, authorization(['DEPARTMENT_MANAGER']), SkillController.createSkill)
+router.post('/create-skill', authMiddleware,  SkillController.createSkill)
 //route for department manager to get skills from his department
 router.get('/get-skills',authMiddleware,SkillController.getSkills)
-router.delete('/delete-category', authMiddleware,authorization(['DEPARTMENT_MANAGER', 'ADMIN']), SkillController.deleteCategory)
-router.put('/update-category', authMiddleware, authorization(['DEPARTMENT_MANAGER', 'ADMIN']), SkillController.updateCategory)
+router.delete('/delete-category', authMiddleware, SkillController.deleteCategory)
+router.put('/update-category', authMiddleware,  SkillController.updateCategory)
 export default router

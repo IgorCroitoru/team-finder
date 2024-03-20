@@ -22,5 +22,5 @@ router.get('/my-projects', authMiddleware, UserController.myProjects)
 
 //routes for managers/admins...
 router.get('/:userId/skills',  authMiddleware,  UserController.userSkills) // route for getting a specific user skills. Accessible for dep. manager so far
-router.get('/created-projects', authMiddleware, authorization(['DEPARTMENT_MANAGER']),ProjectController.getCreatedProjects)
+router.get('/created-projects', authMiddleware,ProjectController.getCreatedProjects)
 export default router;

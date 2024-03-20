@@ -3,7 +3,7 @@ name: Build and deploy container app to Azure Web App - TeamFinderApp
 on:
   push:
     branches:
-      - main
+      - previous-version
   workflow_dispatch:
 
 jobs:

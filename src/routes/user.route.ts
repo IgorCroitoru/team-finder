@@ -9,7 +9,8 @@ const router = Router();
 //-----------------------------------------------------------------------------------//
 //for my routes
 router.get('/refresh',UserController.refresh)
-router.post('/logout',UserController.logout)
+router.get('/logout', UserController.logout)
+router.post('/logout',authMiddleware, UserController.logout)
 router.get('/me',authMiddleware, UserController.me)
 router.post('/assign-skill', authMiddleware, UserController.assignSkill)
 router.get('/my-skills', authMiddleware, UserController.userSkills)

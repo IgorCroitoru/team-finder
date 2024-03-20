@@ -3,7 +3,6 @@ import dotenv from "dotenv"
 import { string } from 'joi';
 import { UserDto } from '../shared/dtos/user.dto';
 import { IToken } from '../shared/interfaces/token.interface';
-import { TokenRepository } from '../repository/mongo/TokenRepository';
 import { TokenModel } from '../models/token.model';
 import { ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION } from '../../constants';
 import { Errors } from '../exceptions/api.error';

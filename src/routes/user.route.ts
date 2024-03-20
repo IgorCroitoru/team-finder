@@ -13,7 +13,7 @@ router.get('/log', async (req: Request, res:Response, next:NextFunction)=>{
 })
 //-----------------------------------------------------------------------------------//
 //for my routes
-router.get('/refresh',UserController.refresh)
+router.get('/refresh',authMiddleware,UserController.refresh)
 router.get('/logout', UserController.logout)
 router.post('/logout',authMiddleware, UserController.logout)
 router.get('/me',authMiddleware, UserController.me)

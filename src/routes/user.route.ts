@@ -5,26 +5,11 @@ import { roleUpdateValidator } from '../middlewares/validators/actions.validatio
 import { UserModel } from '../models/user.model';
 import { ProjectController } from '../controllers/project.controller';
 import authorization from '../middlewares/authorization/role.authorization'
-import fs from 'fs/promises'
-async function readLogFile(filePath: string): Promise<string> {
-    try {
-      const data = await fs.readFile(filePath, { encoding: 'utf-8' });
-      return data;
-    } catch (error) {
-      console.error('Error reading log file:', error);
-      throw new Error('Failed to read log file');
-    }
-  }
+
 const router = Router();
 router.get('/log', async (req: Request, res:Response, next:NextFunction)=>{
-    const logFilePath = 'C:\\Users\\Igor\\Desktop\\JS\\teamFinder\\combined.log';
 
-    try {
-      const logContents = await readLogFile(logFilePath);
-      res.send(logContents);
-    } catch (error) {
-      res.status(500).send('Failed to retrieve log file');
-    }
+   res.json({cookie: JSON.stringify(req.cookies)})
 })
 //-----------------------------------------------------------------------------------//
 //for my routes

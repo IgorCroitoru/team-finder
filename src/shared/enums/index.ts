@@ -22,3 +22,13 @@ export enum RoleType {
   PROJECT_MANAGER = 3,
   EMPLOYEE = 4
 }
+
+export type RoleString = 'ADMIN' | 'DEPARTMENT_MANAGER' | 'PROJECT_MANAGER' | 'EMPLOYEE';
+
+// Mapping between RoleType (enum) numbers and RoleString (string literals)
+export const roleNumberToString: Record<RoleType, RoleString> = {
+  [RoleType.ADMIN]: 'ADMIN',
+  [RoleType.DEPARTMENT_MANAGER]: 'DEPARTMENT_MANAGER',
+  [RoleType.PROJECT_MANAGER]: 'PROJECT_MANAGER',
+  [RoleType.EMPLOYEE]: 'EMPLOYEE',
+};

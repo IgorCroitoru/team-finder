@@ -35,8 +35,8 @@ export class UserController{
         try{
             const {refreshToken} = req.cookies
             await TokenService.removeToken(refreshToken)
-            //res.clearCookie('refreshToken', COOKIE_SETTINGS.REFRESH_TOKEN)
-            res.cookie('refreshToken', '',{...COOKIE_SETTINGS.REFRESH_TOKEN , maxAge: 0});
+            res.clearCookie('refreshToken', COOKIE_SETTINGS.REFRESH_TOKEN)
+            //res.cookie('refreshToken', '',{...COOKIE_SETTINGS.REFRESH_TOKEN , maxAge: 0});
             return res.json({success: true})
         }
         catch(e){

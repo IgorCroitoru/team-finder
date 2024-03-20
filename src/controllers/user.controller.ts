@@ -34,9 +34,9 @@ export class UserController{
     static async logout(req: Request, res: Response, next:NextFunction){
         try{
             const {refreshToken} = req.cookies
+            console.log("logout",refreshToken)
             await TokenService.removeToken(refreshToken)
             res.clearCookie('refreshToken')
-            //res.cookie('refreshToken', '',{...COOKIE_SETTINGS.REFRESH_TOKEN , maxAge: 0});
             return res.json({success: true})
         }
         catch(e){
@@ -47,6 +47,7 @@ export class UserController{
     static async refresh(req: Request, res: Response, next:NextFunction){
         try{
             const {refreshToken} = req.cookies
+            console.log("refresh",refreshToken)
             const userData = await UserService.refresh(refreshToken)
             res.cookie('refreshToken', userData.refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN)
             return res.json(userData);

@@ -5,6 +5,8 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { roleUpdateValidator } from '../middlewares/validators/actions.validation';
 import { UserModel } from '../models/user.model';
 import { ProjectController } from '../controllers/project.controller';
+import authorization from '../middlewares/authorization/role.authorization'
+
 const router = Router();
 //-----------------------------------------------------------------------------------//
 //for my routes
@@ -19,6 +21,6 @@ router.get('/my-projects', authMiddleware, UserController.myProjects)
 //------------------------------------------------------------------------------------//
 
 //routes for managers/admins...
-router.get('/:userId/skills', authMiddleware, UserController.userSkills) // route for getting a specific user skills. Accessible for dep. manager so far
-router.get('/created-projects', authMiddleware,ProjectController.getCreatedProjects)
+router.get('/:userId/skills',  authMiddleware,  UserController.userSkills) // route for getting a specific user skills. Accessible for dep. manager so far
+router.get('/created-projects', authMiddleware, authorization(['DEPARTMENT_MANAGER']),ProjectController.getCreatedProjects)
 export default router;

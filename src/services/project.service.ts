@@ -158,5 +158,40 @@ export class ProjectService {
         }
         return project
     }
-    //static async acceptUserToProject()
+    /**
+     * Method for a department manager for accepting/declining user assignment to a project
+     * @param memberId 
+     */
+    //  static async acceptUserToProject(memberId: string | mongoose.ObjectId, managerId: string | mongoose.ObjectId, accept = true) {
+    //     try {
+    //       // Assuming UserModel and DepartmentModel are your Mongoose models
+    //       const userToBeAssigned = await ProjectMemberModel.findById(memberId).populate('userId');
+    //       const manager = await UserModel.findById(managerId);
+      
+    //       // Assuming a UserModel has a departmentId field
+    //       if (!userToBeAssigned || !manager || userToBeAssigned.userId.departmentId.toString() !== manager.departmentId.toString()) {
+    //         return { success: false, message: 'Manager is not authorized to accept/decline this user.' };
+    //       }
+      
+    //       const statusUpdate = accept ? 'Active' : 'Declined';
+    //       const updateResult = await ProjectMemberModel.updateOne(
+    //         { _id: memberId, status: 'Awaiting', confirmedById: null },
+    //         { $set: { status: statusUpdate, confirmedById: managerId } }
+    //       );
+      
+    //       if (updateResult.matchedCount === 0) {
+    //         return { success: false, message: 'No pending assignment found for the given ID.' };
+    //       }
+      
+    //       if (updateResult.modifiedCount === 0) {
+    //         return { success: false, message: 'Assignment was not updated. It may have already been processed.' };
+    //       }
+      
+    //       return { success: true, message: `User assignment ${accept ? 'accepted' : 'declined'} successfully.` };
+    //     } catch (error) {
+    //       console.error('Error in acceptUserToProject:', error);
+    //       throw error;
+    //     }
+    //   }
+      
 }

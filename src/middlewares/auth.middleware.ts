@@ -24,7 +24,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
             return next(Errors.ForbiddenError)
         }
         req.user = new UserDto(user)
-        
+        req.userExtended = user;
         next()
 
     }

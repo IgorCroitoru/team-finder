@@ -216,7 +216,11 @@ export class DepartmentService{
         ])
         return {updatedDepartment: updatedDep, updatedSkill}
     }
-
+    /**
+     * 
+     * @param departmentId 
+     * @returns projects fromm a specific department
+     *      */
     static async getProjectsFromDepartment(departmentId: string | mongoose.Schema.Types.ObjectId){
         const pipeline: PipelineStage[] =[
             {

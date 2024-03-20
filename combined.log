@@ -1,1 +1,8 @@
 2024-03-20 21:47:07 [info]: Hello
+2024-03-20 22:04:35 [info]: Cookies first middleware
+2024-03-20 22:06:08 [info]: Cookies first middleware
+2024-03-20 22:06:15 [info]: Cookies first middleware
+2024-03-20 22:07:11 [info]: Cookies first middleware undefined
+2024-03-20 22:08:37 [info]: Cookies first middleware [object Object]
+2024-03-20 22:09:06 [info]: Cookies first middleware {"refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU2MWRhYmFhYTBjOTlhMThhYjM1MTEiLCJlbWFpbCI6Imlnb3JAbWFpbC5jb20iLCJuYW1lIjoiSWdvciIsInJvbGVzIjpbMSwyLDRdLCJvcmdhbml6YXRpb24iOiI2NWU2MGY3MmY1MDE3YjAxOGQzMWE5ZjMiLCJkZXBhcnRtZW50IjoiNjVmNWM3MDJhYzRjZGQ3N2ZlYjhjYmQyIiwiaWF0IjoxNzEwOTY1MTY4LCJleHAiOjE3MTIyNjExNjh9.O5mcnYsxUhSxGicqakkAaweqyPTomq0wunPnuez1m3s"}
+2024-03-20 22:09:42 [info]: Cookies first middleware undefined

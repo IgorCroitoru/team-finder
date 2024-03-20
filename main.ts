@@ -1,6 +1,6 @@
 import dotenv from 'dotenv/config';
 import mongoose from 'mongoose';
-import express, { response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import cookieParser from 'cookie-parser'
 import Fingerprint from "express-fingerprint";
 import { IUser } from './src/shared/interfaces/user.interface';
@@ -20,6 +20,7 @@ import { resolve } from 'path';
 import { IUserSkill } from './src/shared/interfaces/skill.interface';
 import { DepartmentService } from './src/services/department.service';
 import logger from './logger'
+import fs from 'fs/promises'
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +31,9 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204
 };
-app.use((req, res, next) => {
+app.use(cookieParser());
+app.use(express.json());
+app.use((req: Request, res: Response, next: NextFunction) => {
   // Get the origin of the request
   const origin = req.headers.origin;
 
@@ -49,13 +52,12 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
-  logger.info('Cookies first middleware', req.cookies)
+  logger.info(`Cookies first middleware ${JSON.stringify(req.cookies)}`)
   next();
 });
 
 //app.use(cors(corsOptions));
-app.use(cookieParser());
-app.use(express.json());
+
 //app.use(deserialize);
 
 apiRoutes.use('/auth',Routes.authRoute)
@@ -75,3 +77,5 @@ mongoose.connect(String(process.env.REMOTE_MONGO)).then(()=>{
   console.log("Server started on port: ", PORT);
   });
 })
+
+

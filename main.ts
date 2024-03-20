@@ -1,37 +1,22 @@
-import dotenv from 'dotenv/config';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import express, { NextFunction, Request, Response } from 'express'
+import express, { response } from 'express'
 import cookieParser from 'cookie-parser'
-import Fingerprint from "express-fingerprint";
-import { IUser } from './src/shared/interfaces/user.interface';
-import { Experience, RoleType, SkillLevel } from './src/shared/enums';
-import { UserDto } from './src/shared/dtos/user.dto';
 import errorMiddleware from './src/middlewares/errorMiddleWare'
-import authRoute from './src/routes/auth.route'
 import Routes from "./src/routes"
-import cors from 'cors'
-import { deserialize } from './src/middlewares/deserialization';
-import { AdminService } from './src/services/admin.service';
-import { ITeamRole } from './src/shared/interfaces/teamrole.interface';
-import { UserModel } from './src/models/user.model';
-import { Skill, UserSkill } from './src/models/skill.model';
-import { parseExperience} from './src/shared/utils';
-import { resolve } from 'path';
-import { IUserSkill } from './src/shared/interfaces/skill.interface';
-import { DepartmentService } from './src/services/department.service';
+dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const apiRoutes = express.Router();
+// origin: 'https://atc-2024-codebros-fe-linux-web-app.azurewebsites.net'
 const corsOptions = {
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
 };
-app.use(cookieParser());
-app.use(express.json());
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req, res, next) => {
   // Get the origin of the request
   const origin = req.headers.origin;
 
@@ -50,11 +35,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
+
   next();
 });
 
 //app.use(cors(corsOptions));
-
+app.use(cookieParser());
+app.use(express.json());
 //app.use(deserialize);
 
 apiRoutes.use('/auth',Routes.authRoute)
@@ -68,11 +55,11 @@ apiRoutes.use('/project', Routes.projectRouter)
 app.use('/api',apiRoutes)
 app.use(errorMiddleware);
 
-mongoose.connect(String(process.env.REMOTE_MONGO)).then(()=>{
-  mongoose.set('debug', true)
-  app.listen(PORT, () => {
+mongoose.connect(String(process.env.REMOTE_MONGO))
+mongoose.set('debug', true)
+app.listen(PORT, () => {
   console.log("Server started on port: ", PORT);
-  });
-})
+  
+});
 
 

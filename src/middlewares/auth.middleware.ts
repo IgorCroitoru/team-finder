@@ -26,7 +26,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         req.user = new UserDto(user)
         req.userExtended = user;
         next()
-
+        console.log(req)
     }
     catch(e){
         next(e)

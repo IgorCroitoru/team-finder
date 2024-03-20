@@ -19,7 +19,7 @@ import { parseExperience} from './src/shared/utils';
 import { resolve } from 'path';
 import { IUserSkill } from './src/shared/interfaces/skill.interface';
 import { DepartmentService } from './src/services/department.service';
-
+import logger from './logger'
 const app = express();
 const PORT = process.env.PORT || 3000;
 

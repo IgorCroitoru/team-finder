@@ -8,7 +8,7 @@ router.post('/create-category', authMiddleware, authorization(['DEPARTMENT_MANAG
 router.get('/find-category', authMiddleware, SkillController.findCategory)
 router.post('/create-skill', authMiddleware, authorization(['DEPARTMENT_MANAGER']), SkillController.createSkill)
 //route for department manager to get skills from his department
-router.get('/get-skills',authMiddleware, authorization(['DEPARTMENT_MANAGER']),SkillController.getSkills)
+router.get('/get-skills',authMiddleware,SkillController.getSkills)
 router.delete('/delete-category', authMiddleware,authorization(['DEPARTMENT_MANAGER', 'ADMIN']), SkillController.deleteCategory)
 router.put('/update-category', authMiddleware, authorization(['DEPARTMENT_MANAGER', 'ADMIN']), SkillController.updateCategory)
 export default router
